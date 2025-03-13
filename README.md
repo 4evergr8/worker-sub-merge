@@ -23,15 +23,30 @@ Worker链接?links=https://aaa.aaa
 键名：group，用于自定义代理组配置，示例如下：
 ```plaintext
 
-    [
-    {
+[
+    	{
         "name": "🚀 节点选择",
         "type": "select",
+        "icon": "https://github.com/DustinWin/ruleset_geodata/releases/download/icon/appletv.png",
         "proxies": [
             "♻️ 故障转移",
             "⚖️ 负载均衡"
-        ]
-    },
+        	]
+    	},
+    	{
+        "name": "🌍 全球直连",
+        "type": "select",
+        "proxies": [
+            "DIRECT"
+        	]
+    	},
+    	{
+        "name": "🚫全球拦截",
+        "type": "select",
+        "proxies": [
+            "REJECT"
+        	]
+    	},
         {
             "name": "♻️ 故障转移",
             "type": "fallback",
@@ -69,16 +84,7 @@ ipv6: true
 disable-keep-alive: true
 unified-delay: true
 tcp-concurrent: true
-geodata-mode: true
 geodata-loader: standard
-geo-auto-update: true
-geo-update-interval: 24
-geox-url:
-  geoip: "https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo/geoip.dat" #private、cn、netflix 和 telegram
-  geosite: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo/geosite-all.dat" #fakeip-filter、fakeip-filter-lite、private、ads、trackerslist、microsoft-cn、apple-cn、google-cn、games-cn、netflix、disney、max、primevideo、appletv、youtube、tiktok、bilibili、ai、networktest、tld-proxy、proxy、tld-cn 和 cn
-  mmdb: "https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo/Country-lite.mmdb" #private、cn和 telegram
-  asn: "https://github.com/xishang0128/geoip/releases/download/latest/GeoLite2-ASN.mmdb" #netflix 和 telegram
-global-ua: clash.meta
 external-controller: :9090
 
 dns:
@@ -130,23 +136,214 @@ dns:
 键名：post，用于自定义代理后的所有内容，示例如下
 ```plaintext
 
+
+rule-providers:
+  ads:
+    type: http
+    behavior: domain
+    format: mrs
+    proxy: ♻️ 故障转移
+    path: ./rules/ads.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/ads.mrs"
+    interval: 86400
+  networktest:
+    type: http
+    behavior: classical
+    format: text
+    proxy: ♻️ 故障转移
+    path: ./rules/networktest.list
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/networktest.list"
+    interval: 86400
+  tld-proxy:
+    type: http
+    behavior: domain
+    proxy: ♻️ 故障转移
+    format: mrs
+    path: ./rules/tld-proxy.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/tld-proxy.mrs"
+    interval: 86400
+  proxy:
+    type: http
+    behavior: domain
+    proxy: ♻️ 故障转移
+    format: mrs
+    path: ./rules/proxy.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/proxy.mrs"
+    interval: 86400
+  telegramip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    proxy: ♻️ 故障转移
+    path: ./rules/telegramip.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/telegramip.mrs"
+    interval: 86400
+  
+  trackerslist:
+    type: http
+    behavior: domain
+    format: mrs
+    proxy: ♻️ 故障转移
+    path: ./rules/trackerslist.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/trackerslist.mrs"
+    interval: 86400
+  youtube:
+    type: http
+    behavior: domain
+    proxy: ♻️ 故障转移
+    format: mrs
+    path: ./rules/youtube.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/youtube.mrs"
+    interval: 86400
+
+  tiktok:
+    type: http
+    behavior: domain
+    format: mrs
+    proxy: ♻️ 故障转移
+    path: ./rules/tiktok.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/tiktok.mrs"
+    interval: 86400
+  ai:
+    type: http
+    behavior: domain
+    format: mrs
+    proxy: ♻️ 故障转移
+    path: ./rules/ai.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/ai.mrs"
+    interval: 86400
+  microsoft-cn:
+    type: http
+    behavior: domain
+    format: mrs
+    proxy: ♻️ 故障转移
+    path: ./rules/microsoft-cn.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/microsoft-cn.mrs"
+    interval: 86400
+
+  google-cn:
+    type: http
+    behavior: domain
+    format: mrs
+    proxy: ♻️ 故障转移
+    path: ./rules/google-cn.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/google-cn.mrs"
+    interval: 86400
+
+  games-cn:
+    type: http
+    behavior: domain
+    format: mrs
+    proxy: ♻️ 故障转移
+    path: ./rules/games-cn.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/games-cn.mrs"
+    interval: 86400
+  applications:
+    type: http
+    behavior: classical
+    format: text
+    proxy: ♻️ 故障转移
+    path: ./rules/applications.list
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/applications.list"
+    interval: 86400
+  bilibili:
+    type: http
+    behavior: domain
+    format: mrs
+    proxy: ♻️ 故障转移
+    path: ./rules/bilibili.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/bilibili.mrs"
+    interval: 86400
+
+  tld-cn:
+    type: http
+    behavior: domain
+    format: mrs
+    proxy: ♻️ 故障转移
+    path: ./rules/tld-cn.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/tld-cn.mrs"
+    interval: 86400
+
+  cn:
+    type: http
+    behavior: domain
+    format: mrs
+    proxy: ♻️ 故障转移
+    path: ./rules/cn.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/cn.mrs"
+    interval: 86400
+
+  cnip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    proxy: ♻️ 故障转移
+    path: ./rules/cnip.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/cnip.mrs"
+    interval: 86400
+  private:
+    type: http
+    behavior: domain
+    format: mrs
+    proxy: ♻️ 故障转移
+    path: ./rules/private.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/private.mrs"
+    interval: 86400
+  privateip:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    proxy: ♻️ 故障转移
+    path: ./rules/privateip.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/privateip.mrs"
+    interval: 86400
+
+
+
+
 rules:
+  - DOMAIN-REGEX,\b(ads\.|ad\.)\S+,🚫全球拦截
+  - DOMAIN-KEYWORD, .ad., 🚫全球拦截
+  - DOMAIN-KEYWORD, .ads., 🚫全球拦截
+  
+  - RULE-SET,ads,🚫全球拦截
+  - RULE-SET,networktest,🚀 节点选择
+  - RULE-SET,tld-proxy,🚀 节点选择
+  - RULE-SET,proxy,🚀 节点选择
+  - RULE-SET,telegramip,🚀 节点选择,no-resolve
+  - RULE-SET,trackerslist,🚀 节点选择
+  - RULE-SET,youtube,🚀 节点选择
+  - RULE-SET,tiktok,🚀 节点选择
+  - RULE-SET,ai,🚀 节点选择
+  - RULE-SET,microsoft-cn,🌍 全球直连
+  - RULE-SET,google-cn,🌍 全球直连
+  - RULE-SET,games-cn,🌍 全球直连
+  - RULE-SET,applications,🌍 全球直连
+  - RULE-SET,bilibili,🌍 全球直连
+  - RULE-SET,tld-cn,🌍 全球直连
+  - RULE-SET,cn,🌍 全球直连
+  - RULE-SET,cnip,🌍 全球直连
+  - RULE-SET,private,DIRECT
+  - RULE-SET,privateip,DIRECT,no-resolve
+  
+
   - DOMAIN-KEYWORD,github,🚀 节点选择
   - DOMAIN-KEYWORD,twitter,🚀 节点选择
   - DOMAIN-KEYWORD,google,🚀 节点选择
   - DOMAIN-KEYWORD,telegra,🚀 节点选择
 
-  - GEOSITE,proxy,🚀 节点选择
-  - GEOSITE,youtube,🚀 节点选择           
-  - GEOSITE,bilibili,DIRECT
+  - GEOSITE,youtube,🚀 节点选择             
+  - GEOSITE,bilibili,🌍 全球直连
   - GEOSITE,private,DIRECT
-  - GEOSITE,cn,DIRECT
+  - GEOSITE,cn,🌍 全球直连
 
   - GEOIP,telegram,🚀 节点选择       
   - GEOIP,private,DIRECT,no-resolve
-  - GEOIP,cn,DIRECT
+  - GEOIP,cn,🌍 全球直连
   
   - MATCH,🚀 节点选择
+
+
 
 
 ```
