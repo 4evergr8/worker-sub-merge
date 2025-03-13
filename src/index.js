@@ -1,7 +1,56 @@
 import yaml from 'js-yaml';
 
 
+let group = `
 
+    [
+    	{
+        "name": "🚀 节点选择",
+        "type": "select",
+        "icon": "https://github.com/DustinWin/ruleset_geodata/releases/download/icon/appletv.png",
+        "proxies": [
+            "♻️ 故障转移",
+            "⚖️ 负载均衡"
+        	]
+    	},
+    	{
+        "name": "🌍 全球直连",
+        "type": "select",
+        "proxies": [
+            "DIRECT"
+        	]
+    	},
+    	{
+        "name": "🚫全球拦截",
+        "type": "select",
+        "proxies": [
+            "REJECT"
+        	]
+    	},
+        {
+            "name": "♻️ 故障转移",
+            "type": "fallback",
+            "url": "https://www.google.com/",
+            "interval": "300",
+            "lazy": false,
+            "proxies": [
+            
+            ]
+        },
+        {
+            "name": "⚖️ 负载均衡",
+            "type": "load-balance",
+            "strategy": "consistent-hashing",
+            "url": "https://www.google.com/",
+            "interval": "300",
+            "lazy": false,
+            "proxies": [
+            
+            ]
+        }
+    ]
+
+`
 let pre = `
 
 port: 7890
@@ -231,7 +280,10 @@ rule-providers:
 
 
 rules:
-
+  - DOMAIN-REGEX,\\b(ads\\.|ad\\.)\\S+,🚫全球拦截
+  - DOMAIN-KEYWORD, .ad., 🚫全球拦截
+  - DOMAIN-KEYWORD, .ads., 🚫全球拦截
+  
   - RULE-SET,ads,🚫全球拦截
   - RULE-SET,networktest,🚀 节点选择
   - RULE-SET,tld-proxy,🚀 节点选择
@@ -252,8 +304,7 @@ rules:
   - RULE-SET,private,DIRECT
   - RULE-SET,privateip,DIRECT,no-resolve
   
-  - DOMAIN-REGEX,\\b(ads\\.|ad\\.)\\S+,🚫全球拦截
-  - DOMAIN-KEYWORD, .ad., 🚫全球拦截
+
   - DOMAIN-KEYWORD,github,🚀 节点选择
   - DOMAIN-KEYWORD,twitter,🚀 节点选择
   - DOMAIN-KEYWORD,google,🚀 节点选择
@@ -271,56 +322,7 @@ rules:
   - MATCH,🚀 节点选择
 
 `
-let group = `
 
-    [
-    	{
-        "name": "🚀 节点选择",
-        "type": "select",
-        "icon": "https://github.com/DustinWin/ruleset_geodata/releases/download/icon/appletv.png",
-        "proxies": [
-            "♻️ 故障转移",
-            "⚖️ 负载均衡"
-        	]
-    	},
-    	{
-        "name": "🌍 全球直连",
-        "type": "select",
-        "proxies": [
-            "DIRECT"
-        	]
-    	},
-    	{
-        "name": "🚫全球拦截",
-        "type": "select",
-        "proxies": [
-            "REJECT"
-        	]
-    	},
-        {
-            "name": "♻️ 故障转移",
-            "type": "fallback",
-            "url": "https://www.google.com/",
-            "interval": "300",
-            "lazy": false,
-            "proxies": [
-            
-            ]
-        },
-        {
-            "name": "⚖️ 负载均衡",
-            "type": "load-balance",
-            "strategy": "consistent-hashing",
-            "url": "https://www.google.com/",
-            "interval": "300",
-            "lazy": false,
-            "proxies": [
-            
-            ]
-        }
-    ]
-
-`
 let warnings = ''
 
 
