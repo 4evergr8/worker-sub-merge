@@ -2887,6 +2887,9 @@ rules:
     const url = new URL(request.url);
     const links = url.searchParams.get("links");
     const linkArray = links.split(",");
+    const resultString = linkArray.map((link) => `#${link}
+`).join("");
+    warnings += resultString;
     const headers = {
       "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
     };
@@ -2939,7 +2942,7 @@ rules:
       warnings += "#KV\u914D\u7F6E\u5931\u8D25\uFF0C\u4F7F\u7528\u9ED8\u8BA4post\u503C\n";
     }
     try {
-      await BACKUP.put(Date.now().toString(), content, { expirationTTL: 14 * 24 * 60 * 60 });
+      await BACKUP.put(Date.now().toString(), warnings + content, { expirationTTL: 14 * 24 * 60 * 60 });
     } catch (error) {
       warnings += "#\u4FDD\u5B58\u5907\u4EFD\u5931\u8D25\n";
     }
