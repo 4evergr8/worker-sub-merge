@@ -37,6 +37,7 @@ Worker链接?links=https://aaa.aaa
             "type": "fallback",
             "url": "https://www.google.com/",
             "interval": "300",
+            "lazy": "false",
             "proxies": [
             
             ]
@@ -47,6 +48,7 @@ Worker链接?links=https://aaa.aaa
             "strategy": "consistent-hashing",
             "url": "https://www.google.com/",
             "interval": "300",
+            "lazy": "false",
             "proxies": [
             
             ]
@@ -58,22 +60,75 @@ Worker链接?links=https://aaa.aaa
 键名：pre，用于自定义代理前的所有内容，示例如下
 ```plaintext
 
+
 port: 7890
 socks-port: 7891
-allow-lan: false
 mode: Rule
+allow-lan: false
 log-level: silent
+ipv6: true
+disable-keep-alive: true
+unified-delay: true
+tcp-concurrent: true
+geodata-mode: true
+geodata-loader: standard
+geo-auto-update: true
+geo-update-interval: 24
+geox-url:
+  geoip: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo/geoip.dat" #private、cn、netflix 和 telegram
+  geosite: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo/geosite.dat" #fakeip-filter、fakeip-filter-lite、private、ads、trackerslist、microsoft-cn、apple-cn、google-cn、games-cn、ai、networktest、tld-proxy、proxy、tld-cn 和 cn
+  mmdb: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo/Country-lite.mmdb" #private、cn和 telegram
+  asn: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo/Country-ASN.mmdb" #netflix 和 telegram
+global-ua: clash.meta
 external-controller: :9090
+
+
 dns:
   enable: true
+  cache-algorithm: lru
+  prefer-h3: false
+  use-hosts: true
+  use-system-hosts: true
+  respect-rules: false
+  listen: 0.0.0.0:1053
+  ipv6: false
+  default-nameserver:
+    - system
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter-mode: blacklist
+  fake-ip-filter:
+    - 'geosite:fakeip-filter'
+    - 'geosite:private'
+    - '*.lan'
+  nameserver-policy:
+    '+.arpa': '10.0.0.1'
+    '+.internal.crop.com': '10.0.0.1'
+    'geosite:cn': system
+
   nameserver:
-    - 119.29.29.29
-    - 223.5.5.5
+    - https://doh.pub/dns-query
+    - https://101.102.103.104/dns-query#skip-cert-verify=true
+    - https://public.dns.iij.jp/dns-query
+    - https://dns.flyme.cc/dns-query
   fallback:
-    - 8.8.8.8
-    - 8.8.4.4
-    - tls://1.0.0.1:853
-    - tls://dns.google:853
+    - tls://1.1.1.1#RULES
+    - tls://8.8.8.8#RULES
+    - https://101.102.103.104/dns-query#skip-cert-verify=true
+    - https://public.dns.iij.jp/dns-query
+  proxy-server-nameserver:
+    - https://doh.pub/dns-query
+  direct-nameserver:
+
+  direct-nameserver-follow-policy:
+  fallback-filter:
+    geoip: false
+    geoip-code: CN
+    geosite:
+    ipcidr:
+      - 240.0.0.0/4
+    domain:
+
 
 ```
 键名：post，用于自定义代理后的所有内容，示例如下
@@ -86,10 +141,15 @@ rules:
   - DOMAIN-KEYWORD,google,🚀 节点选择
   - DOMAIN-KEYWORD,telegra,🚀 节点选择
 
-  - GEOSITE,gfw,🚀 节点选择
+  - GEOSITE,private,DIRECT
   - GEOSITE,cn,DIRECT
+  - GEOSITE,tld-cn,DIRECT
+  - GEOSITE,ads,REJECT
+  - GEOSITE,tld-proxy,🚀 节点选择
+  - GEOSITE,proxy,🚀 节点选择
   - GEOIP,private,DIRECT,no-resolve
-  - GEOIP,CN,DIRECT
+  - GEOIP,cn,DIRECT
+  - GEOIP,telegram,🚀 节点选择
   - MATCH,🚀 节点选择
 
 ```
