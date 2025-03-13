@@ -76,6 +76,7 @@ dns:
 let post = `
 
 rules:
+  - DOMAIN-KEYWORD, ad., REJECT
   - DOMAIN-KEYWORD,github,🚀 节点选择
   - DOMAIN-KEYWORD,twitter,🚀 节点选择
   - DOMAIN-KEYWORD,google,🚀 节点选择
