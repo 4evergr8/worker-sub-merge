@@ -1,5 +1,6 @@
 # Clash订阅修改及合并工具
 ### 基于[Cloudflare Workers©](https://workers.cloudflare.com/)进行部署，可自定义域名  
+### 测试链接[merge.4evergr8.workers.dev](https://merge.4evergr8.workers.dev?links=)
 
 
 ## 部署  
