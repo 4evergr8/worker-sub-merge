@@ -51,7 +51,8 @@ let group = `
         {
             "name": "♻️ 故障转移",
             "type": "fallback",
-            "url": "https://www.google.co300",
+            "url": "https://www.google.com/",
+            "interval": "300",
             "proxies": [
             
             ]
