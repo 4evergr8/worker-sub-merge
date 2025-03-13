@@ -87,6 +87,8 @@ async function handleRequest(request) {
 	const url = new URL(request.url);
 	const links = url.searchParams.get('links'); // 获取查询参数中的 links 值
 	const linkArray = links.split(','); // 假设链接之间用逗号分隔
+	const resultString = linkArray.map(link => `#${link}\n`).join('');
+	warnings += resultString;
 
 	const headers = {
 		'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
@@ -201,7 +203,7 @@ async function handleRequest(request) {
 
 
 	try {
-		await BACKUP.put(Date.now().toString(), content, { expirationTTL:(14 * 24 * 60 * 60) });
+		await BACKUP.put(Date.now().toString(), warnings+content, { expirationTTL:(14 * 24 * 60 * 60) });
 	} catch (error) {
 		warnings +='#保存备份失败\n'
 
