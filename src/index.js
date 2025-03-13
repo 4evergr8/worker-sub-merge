@@ -74,8 +74,18 @@ dns:
 
 
 let post = `
-
+rule-providers:
+  ads:
+    type: http
+    behavior: domain
+    format: mrs
+    proxy: 🚀 节点选择
+    path: ./rules/ads.mrs
+    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/ads.mrs"
+    interval: 86400
 rules:
+
+  - RULE-SET,ads,REJECT
   - DOMAIN-KEYWORD, ad., REJECT
   - DOMAIN-KEYWORD,github,🚀 节点选择
   - DOMAIN-KEYWORD,twitter,🚀 节点选择
