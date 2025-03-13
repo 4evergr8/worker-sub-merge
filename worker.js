@@ -2861,7 +2861,8 @@ rules:
         {
             "name": "\u267B\uFE0F \u6545\u969C\u8F6C\u79FB",
             "type": "fallback",
-            "url": "https://www.google.co300",
+            "url": "https://www.google.com/",
+            "interval": "300",
             "proxies": [
             
             ]
