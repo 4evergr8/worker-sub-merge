@@ -137,8 +137,7 @@ rules:
   - DOMAIN-KEYWORD,telegra,🚀 节点选择
 
   - GEOSITE,proxy,🚀 节点选择
-  - GEOSITE,youtube,🚀 节点选择  
-  - GEOSITE,gfw,🚀 节点选择            
+  - GEOSITE,youtube,🚀 节点选择           
   - GEOSITE,bilibili,DIRECT
   - GEOSITE,private,DIRECT
   - GEOSITE,cn,DIRECT
