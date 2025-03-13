@@ -65,6 +65,7 @@ dns:
 
 
 let post = `
+
 rule-providers:
   ads:
     type: http
@@ -251,7 +252,8 @@ rules:
   - RULE-SET,private,DIRECT
   - RULE-SET,privateip,DIRECT,no-resolve
   
-  - DOMAIN-KEYWORD, ad., 🚫全球拦截
+  - DOMAIN-REGEX,\\b(ads\\.|ad\\.)\\S+,🚫全球拦截
+  - DOMAIN-KEYWORD, .ad., 🚫全球拦截
   - DOMAIN-KEYWORD,github,🚀 节点选择
   - DOMAIN-KEYWORD,twitter,🚀 节点选择
   - DOMAIN-KEYWORD,google,🚀 节点选择
