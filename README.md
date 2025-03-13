@@ -37,7 +37,7 @@ Worker链接?links=https://aaa.aaa
             "type": "fallback",
             "url": "https://www.google.com/",
             "interval": "300",
-            "lazy": "false",
+            "lazy": false,
             "proxies": [
             
             ]
@@ -48,7 +48,7 @@ Worker链接?links=https://aaa.aaa
             "strategy": "consistent-hashing",
             "url": "https://www.google.com/",
             "interval": "300",
-            "lazy": "false",
+            "lazy": false,
             "proxies": [
             
             ]
@@ -59,7 +59,6 @@ Worker链接?links=https://aaa.aaa
 ```
 键名：pre，用于自定义代理前的所有内容，示例如下
 ```plaintext
-
 
 port: 7890
 socks-port: 7891
@@ -75,13 +74,12 @@ geodata-loader: standard
 geo-auto-update: true
 geo-update-interval: 24
 geox-url:
-  geoip: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo/geoip.dat" #private、cn、netflix 和 telegram
-  geosite: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo/geosite.dat" #fakeip-filter、fakeip-filter-lite、private、ads、trackerslist、microsoft-cn、apple-cn、google-cn、games-cn、ai、networktest、tld-proxy、proxy、tld-cn 和 cn
-  mmdb: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo/Country-lite.mmdb" #private、cn和 telegram
-  asn: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo/Country-ASN.mmdb" #netflix 和 telegram
+  geoip: "https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo/geoip.dat" #private、cn、netflix 和 telegram
+  geosite: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo/geosite-all.dat" #fakeip-filter、fakeip-filter-lite、private、ads、trackerslist、microsoft-cn、apple-cn、google-cn、games-cn、netflix、disney、max、primevideo、appletv、youtube、tiktok、bilibili、ai、networktest、tld-proxy、proxy、tld-cn 和 cn
+  mmdb: "https://cdn.jsdelivr.net/gh/DustinWin/ruleset_geodata@mihomo/Country-lite.mmdb" #private、cn和 telegram
+  asn: "https://github.com/xishang0128/geoip/releases/download/latest/GeoLite2-ASN.mmdb" #netflix 和 telegram
 global-ua: clash.meta
 external-controller: :9090
-
 
 dns:
   enable: true
@@ -98,7 +96,6 @@ dns:
   fake-ip-range: 198.18.0.1/16
   fake-ip-filter-mode: blacklist
   fake-ip-filter:
-    - 'geosite:fakeip-filter'
     - 'geosite:private'
     - '*.lan'
   nameserver-policy:
@@ -129,7 +126,6 @@ dns:
       - 240.0.0.0/4
     domain:
 
-
 ```
 键名：post，用于自定义代理后的所有内容，示例如下
 ```plaintext
@@ -137,20 +133,22 @@ dns:
 rules:
   - DOMAIN-KEYWORD,github,🚀 节点选择
   - DOMAIN-KEYWORD,twitter,🚀 节点选择
-  - DOMAIN-KEYWORD,youtube,🚀 节点选择
   - DOMAIN-KEYWORD,google,🚀 节点选择
   - DOMAIN-KEYWORD,telegra,🚀 节点选择
 
+  - GEOSITE,proxy,🚀 节点选择
+  - GEOSITE,youtube,🚀 节点选择  
+  - GEOSITE,gfw,🚀 节点选择            
+  - GEOSITE,bilibili,DIRECT
   - GEOSITE,private,DIRECT
   - GEOSITE,cn,DIRECT
-  - GEOSITE,tld-cn,DIRECT
-  - GEOSITE,ads,REJECT
-  - GEOSITE,tld-proxy,🚀 节点选择
-  - GEOSITE,proxy,🚀 节点选择
+
+  - GEOIP,telegram,🚀 节点选择       
   - GEOIP,private,DIRECT,no-resolve
   - GEOIP,cn,DIRECT
-  - GEOIP,telegram,🚀 节点选择
+  
   - MATCH,🚀 节点选择
+
 
 ```
 
