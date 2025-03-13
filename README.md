@@ -35,7 +35,8 @@ Worker链接?links=https://aaa.aaa
         {
             "name": "♻️ 故障转移",
             "type": "fallback",
-            "url": "https://www.google.co300",
+            "url": "https://www.google.com/",
+            "interval": "300",
             "proxies": [
             
             ]
@@ -51,6 +52,7 @@ Worker链接?links=https://aaa.aaa
             ]
         }
     ]
+
 
 ```
 键名：pre，用于自定义代理前的所有内容，示例如下
