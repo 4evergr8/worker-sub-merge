@@ -1,1198 +1,663 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Clash配置融合</title>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <style>
+    <link rel="apple-touch-icon" sizes="180x180" href="https://4evergr8.github.io/resources/icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://4evergr8.github.io/resources/icon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://4evergr8.github.io/resources/icon.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clash配置融合</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
 
 
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans&family=Noto+Sans+SC:wght@400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans&family=Noto+Sans+SC:wght@400&display=swap');
+        img{
+            max-width: 256px;
+        }
+        .bvambient_particle
+        {
+            position: absolute;
+            pointer-events: none;
+            transition: top linear, left linear;
 
-    #qrcode {
-      margin: 20px auto;
-      display: block;
-      border: 2px solid #007bff; /* 边框颜色 */
-    }
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box; /* 使宽度和高度计算包括内边距 */
-    }
+        }
 
-    body {
-      font-family: "Noto Sans","Noto Sans SC",serif;
-      background-color: black;
-      display: flex;
-      flex-direction: column;
-      align-items: center; /* 水平居中 */
-      justify-content: center; /* 垂直居中 */
-      height: 100vh; /* 视口高度 */
-      margin: 0; /* 去掉默认的边距 */
-
-    }
+        #ambient {
+            overflow: hidden;
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            z-index: -1; /* 将元素置于最底层 */
+        }
+        #qrcode {
 
 
-    h1 {
-      font-size: 30px;
-      text-align: center; /* 标题居中 */
-      color: black; /* 字体颜色 */
-      margin: 10px; /* 边距 */
-    }
-    h2 {
-      text-align: center; /* 标题居中 */
-      color: black; /* 字体颜色 */
-      margin: 10px; /* 边距 */
-    }
-    h3 {
-      text-align: center; /* 标题居中 */
-      color: black; /* 字体颜色 */
-      margin: 10px; /* 边距 */
-    }
+            display: block; /* 确保是块级元素 */
+            margin: 20px auto; /* 居中显示 */
+            overflow: hidden; /* 防止内容溢出 */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; /* 使宽度和高度计算包括内边距 */
+        }
+
+        body {
+            font-family: "Noto Sans", "Noto Sans SC", serif;
+            background-color: black;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* 水平居中 */
+            justify-content: center; /* 垂直居中 */
+            height: 100vh; /* 视口高度 */
+            margin: 0; /* 去掉默认的边距 */
+
+        }
 
 
-    .input-group {
-      display: flex; /* 使用弹性布局 */
-      justify-content: center; /* 居中对齐 */
-      margin-bottom: 20px; /* 下边距 */
-    }
+        h1 {
+            font-size: 30px;
+            text-align: center; /* 标题居中 */
+            color: black; /* 字体颜色 */
+            margin: 10px; /* 边距 */
+        }
 
-    label {
-      font-size: 18px; /* 标签字体大小 */
-      margin: 10px; /* 边距 */
-      align-self: center; /* 垂直居中 */
-    }
+        h2 {
+            text-align: center; /* 标题居中 */
+            color: black; /* 字体颜色 */
+            margin: 10px; /* 边距 */
+        }
 
-
-    input[type="text"] {
-      margin: 10px; /* 每个按钮周围有10px的间距 */
-      padding: 10px; /* 内边距 */
-      border: 2px solid #007bff; /* 边框颜色 */
-      border-radius: 10px; /* 圆角 */
-      font-size: 16px; /* 字体大小 */
-      width: 200px; /* 输入框宽度 */
-      transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; /* 添加过渡效果 */
-    }
-
-    input[type="text"]:focus {
-      border-color: #0056b3; /* 聚焦时边框颜色 */
-      outline: none; /* 去掉默认的轮廓 */
-      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* 聚焦时阴影 */
-    }
-
-    input[type="text"]:hover {
-      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.5); /* 悬停时阴影 */
-      transform: scale(1.1); /* 悬停时上移 */
-    }
-
-    button {
-      font-family: "ZCOOL KuaiLe", serif;
-      margin: 10px; /* 每个按钮周围有10px的间距 */
-      padding: 10px 15px; /* 内边距 */
-      background-color: #007bff; /* 按钮背景色 */
-      color: white; /* 按钮字体颜色 */
-      border: none; /* 去掉边框 */
-      border-radius: 10px; /* 圆角 */
-      font-size: 16px; /* 字体大小 */
-      cursor: pointer; /* 鼠标指针样式 */
-      transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s; /* 添加过渡效果 */
-    }
-
-    button:hover {
-      background-color: #0056b3; /* 悬停时背景色 */
-      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.5); /* 悬停时阴影 */
-      transform: scale(1.1); /* 悬停时放大 */
-    }
-
-    canvas {
-      height: 100%;
-      left: 0;
-      position: fixed;
-      top: 0;
-      touch-action: none;
-      width: 100%;
-      z-index: -1; /* 确保canvas在所有内容后面 */
-    }
+        h3 {
+            text-align: center; /* 标题居中 */
+            color: black; /* 字体颜色 */
+            margin: 10px; /* 边距 */
+        }
 
 
+        .input-group {
+            display: flex; /* 使用弹性布局 */
+            justify-content: center; /* 居中对齐 */
+            margin-bottom: 20px; /* 下边距 */
+        }
+
+        label {
+            font-size: 18px; /* 标签字体大小 */
+            margin: 10px; /* 边距 */
+            align-self: center; /* 垂直居中 */
+        }
 
 
+        input[type="text"] {
+            margin: 10px; /* 每个按钮周围有10px的间距 */
+            padding: 10px; /* 内边距 */
+            border: 2px solid #007bff; /* 边框颜色 */
+            border-radius: 10px; /* 圆角 */
+            font-size: 16px; /* 字体大小 */
+            width: 200px; /* 输入框宽度 */
+            transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s; /* 添加过渡效果 */
+        }
 
-    .card-back {
+        input[type="text"]:focus {
+            border-color: #0056b3; /* 聚焦时边框颜色 */
+            outline: none; /* 去掉默认的轮廓 */
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* 聚焦时阴影 */
+        }
 
-      padding: 20px; /* 内边距 */
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* 阴影效果 */
-      text-align: center; /* 文本居中 */
-      background: linear-gradient(to right, rgba(50, 50, 50, 1), rgba(211, 211, 211, 1)); /* 更淡的黑到浅灰的渐变 */
+        input[type="text"]:hover {
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.5); /* 悬停时阴影 */
+            transform: scale(1.1); /* 悬停时上移 */
+        }
+
+        button {
+            font-family: "ZCOOL KuaiLe", serif;
+            margin: 10px; /* 每个按钮周围有10px的间距 */
+            padding: 10px 15px; /* 内边距 */
+            background-color: #007bff; /* 按钮背景色 */
+            color: white; /* 按钮字体颜色 */
+            border: none; /* 去掉边框 */
+            border-radius: 10px; /* 圆角 */
+            font-size: 16px; /* 字体大小 */
+            cursor: pointer; /* 鼠标指针样式 */
+            transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s; /* 添加过渡效果 */
+        }
+
+        button:hover {
+            background-color: #0056b3; /* 悬停时背景色 */
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.5); /* 悬停时阴影 */
+            transform: scale(1.1); /* 悬停时放大 */
+        }
 
 
-      border-radius: 15px;
-      border: 2px solid #007bff; /* 边框颜色 */
-    }
+        .card-back {
+
+            padding: 20px; /* 内边距 */
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* 阴影效果 */
+            text-align: center; /* 文本居中 */
+            background: linear-gradient(to right, rgba(50, 50, 50, 1), rgba(211, 211, 211, 1)); /* 更淡的黑到浅灰的渐变 */
 
 
+            border-radius: 15px;
+            border: 2px solid #007bff; /* 边框颜色 */
+        }
 
-  </style>
+
+    </style>
 
 </head>
 <body>
-<canvas></canvas>
+<div id="ambient"></div>
+
 <script>
-  const conversionFactor = 180 / Math.PI;
+    /*-------------------------
 
-  var radianToDegrees = function(radian) {
-    return radian * conversionFactor;
-  }
+BVAmbient - VanillaJS Particle Background
+https://bmsvieira.github.io/BVAmbient/
 
-  var degreesToRadian = function(degrees) {
-    return degrees / conversionFactor;
-  }
+Made by: Bruno Vieira
 
-  /**
-   * A basic 2D Vector class that provides simple algebraic functionality in the form
-   * of 2D Vectors.
-   *
-   * We use Getters/setters for both principle properties (x & y) as well as virtual
-   * properties (rotation, length etc.).
-   *
-   * @class Vector
-   * @author Liam Egan <liam@wethecollective.com>
-   * @version 0.1.1
-   * @created Dec 19, 2016
-   */
-  class Vector {
+--------------------------- */
 
-    /**
-     * The Vector Class constructor
-     *
-     * @constructor
-     * @param {number} x 				The x coord
-     * @param {number} y 				The y coord
-     */
-    constructor(x, y){
-      this.x = x;
-      this.y = y;
-    }
+    var isPaused = false;
 
-    /**
-     * Resets the vector coordinates
-     *
-     * @public
-     * @param {number} x 				The x coord
-     * @param {number} y 				The y coord
-     */
-    reset(x, y) {
-      this.x = x;
-      this.y = y;
-    }
+    class BVAmbient {
 
-    /**
-     * Resets the vector coordinates to another vector object
-     *
-     * @public
-     * @param {Vector} v 				The vector object to use to reset the coordinates
-     */
-    resetToVector(v) {
-      if(v instanceof Vector) {
-        this.x = v.x;
-        this.y = v.y;
-      }
-    }
+        constructor({
+                        selector = 'defaultId',
+                        particle_number = "50",
+                        particle_maxwidth = "30",
+                        particle_minwidth = "5",
+                        particle_radius = "50",
+                        particle_opacity = true,
+                        particle_colision_change = true,
+                        particle_background = "#ededed",
+                        particle_image = {
+                            image: false,
+                            src: ""
+                        },
+                        responsive = [
+                            {
+                                breakpoint: "default"
+                            }
+                        ],
+                        fps = "60",
+                        max_transition_speed = 12000,
+                        min_transition_speed = 8000,
+                        refresh_onfocus = true
+                    })
+        {
+            // Define Variables
+            this.selector = selector.substring(1);
+            this.particle_number = particle_number;
+            this.fps = fps;
+            this.max_transition_speed = max_transition_speed,
+                this.min_transition_speed = min_transition_speed,
+                this.particle_maxwidth = particle_maxwidth;
+            this.particle_minwidth = particle_minwidth;
+            this.particle_radius = particle_radius;
+            this.particle_colision_change = particle_colision_change;
+            this.particle_background = particle_background;
+            this.particle_image = particle_image;
+            this.responsive = responsive;
+            this.particle_opacity = particle_opacity;
+            this.refresh_onfocus = refresh_onfocus;
 
-    /**
-     * Clones the vector
-     *
-     * @public
-     * @return {Vector}					The cloned vector
-     */
-    clone() {
-      return new Vector(this.x, this.y);
-    }
+            // Global Variables
+            var randomID = Math.floor(Math.random() * (9999 - 0 + 1)) + 0;
+            var selector = this.selector;
+            var fps = this.fps;
+            var isPlaying = true;
+            var particle_maxwidth = this.particle_maxwidth;
+            var particle_minwidth = this.particle_minwidth;
+            var particle_radius = this.particle_radius;
+            var particle_colision_change = this.particle_colision_change;
+            var particle_background = this.particle_background;
+            var particle_image = this.particle_image;
+            var responsive = this.responsive;
+            var particle_opacity = this.particle_opacity;
+            var trail_count = 0;
+            var max_transition_speed = this.max_transition_speed;
+            var min_transition_speed = this.min_transition_speed;
+            var refresh_onfocus = this.refresh_onfocus;
 
-    /**
-     * Adds one vector to another.
-     *
-     * @public
-     * @chainable
-     * @param  {Vector}  vector The vector to add to this one
-     * @return {Vector}					Returns itself, modified
-     */
-    add(vector) {
-      this.x += vector.x;
-      this.y += vector.y;
-      return this;
-    }
-    /**
-     * Clones the vector and adds the vector to it instead
-     *
-     * @public
-     * @chainable
-     * @param  {Vector}  vector The vector to add to this one
-     * @return {Vector}					Returns the clone of itself, modified
-     */
-    addNew(vector) {
-      let v = this.clone();
-      return v.add(vector);
-    }
+            var particle_x_ray = [];
 
-    /**
-     * Adds a scalar to the vector, modifying both the x and y
-     *
-     * @public
-     * @chainable
-     * @param  {number}  scalar The scalar to add to the vector
-     * @return {Vector}					Returns itself, modified
-     */
-    addScalar(scalar) {
-      return this.add(new Vector(scalar, scalar));
-    }
-    /**
-     * Clones the vector and adds the scalar to it instead
-     *
-     * @public
-     * @chainable
-     * @param  {number}  scalar The scalar to add to the vector
-     * @return {Vector}					Returns the clone of itself, modified
-     */
-    addScalarNew(scalar) {
-      let v = this.clone();
-      return v.addScalar(scalar);
-    }
+            // Add movement to particle
+            this.MoveParticle = function(element) {
 
-    /**
-     * Subtracts one vector from another.
-     *
-     * @public
-     * @chainable
-     * @param  {Vector}  vector The vector to subtract from this one
-     * @return {Vector}					Returns itself, modified
-     */
-    subtract(vector) {
-      this.x -= vector.x;
-      this.y -= vector.y;
-      return this;
-    }
-    /**
-     * Clones the vector and subtracts the vector from it instead
-     *
-     * @public
-     * @chainable
-     * @param  {Vector}  vector The vector to subtract from this one
-     * @return {Vector}					Returns the clone of itself, modified
-     */
-    subtractNew(vector) {
-      let v = this.clone();
-      return v.subtract(vector);
-    }
+                var isresting = 1;
 
-    /**
-     * Subtracts a scalar from the vector, modifying both the x and y
-     *
-     * @public
-     * @chainable
-     * @param  {number}  scalar The scalar to subtract from the vector
-     * @return {Vector}					Returns itself, modified
-     */
-    subtractScalar(scalar) {
-      return this.subtract(new Vector(scalar, scalar));
-    }
-    /**
-     * Clones the vector and subtracts the scalar from it instead
-     *
-     * @public
-     * @chainable
-     * @param  {number}  scalar The scalar to add to the vector
-     * @return {Vector}					Returns the clone of itself, modified
-     */
-    subtractScalarNew(scalar) {
-      let v = this.clone();
-      return v.subtractScalar(scalar);
-    }
+                // Moving Directions
+                var top_down = ['top', "down"];
+                var left_right = ["left", "right"];
 
-    /**
-     * Divides one vector by another.
-     *
-     * @public
-     * @chainable
-     * @param  {Vector}  vector The vector to divide this by
-     * @return {Vector}					Returns itself, modified
-     */
-    divide(vector) {
-      if(vector.x !== 0) {
-        this.x /= vector.x
-      } else {
-        this.x = 0;
-      }
-      if(vector.y !== 0) {
-        this.y /= vector.y
-      } else {
-        this.y = 0;
-      }
-      return this;
-    }
-    /**
-     * Clones the vector and divides it by the vector instead
-     *
-     * @public
-     * @chainable
-     * @param  {Vector}  vector The vector to divide the clone by
-     * @return {Vector}					Returns the clone of itself, modified
-     */
-    divideNew(vector) {
-      let v = this.clone();
-      return v.divide(vector);
-    }
+                // Random value to decide wich direction follow
+                var direction_h = Math.floor(Math.random() * (1 - 0 + 1)) + 0;
+                var direction_v = Math.floor(Math.random() * (1 - 0 + 1)) + 0;
 
-    /**
-     * Divides the vector by a scalar.
-     *
-     * @public
-     * @chainable
-     * @param  {number}  scalar The scalar to divide both x and y by
-     * @return {Vector}					Returns itself, modified
-     */
-    divideScalar(scalar) {
-      var v = new Vector(scalar, scalar);
-      return this.divide(v);
-    }
-    /**
-     * Clones the vector and divides it by the provided scalar.
-     *
-     * @public
-     * @chainable
-     * @param  {number}  scalar The scalar to divide both x and y by
-     * @return {Vector}					Returns the clone of itself, modified
-     */
-    divideScalarNew(scalar) {
-      let v = this.clone();
-      return v.divideScalar(scalar);
-    }
+                // Direction
+                var d_h = left_right[direction_h];
+                var d_v = top_down[direction_v];
 
-    /**
-     * Multiplies one vector by another.
-     *
-     * @public
-     * @chainable
-     * @param  {Vector}  vector The vector to multiply this by
-     * @return {Vector}					Returns itself, modified
-     */
-    multiply(vector) {
-      this.x *= vector.x;
-      this.y *= vector.y;
-      return this;
-    }
-    /**
-     * Clones the vector and multiplies it by the vector instead
-     *
-     * @public
-     * @chainable
-     * @param  {Vector}  vector The vector to multiply the clone by
-     * @return {Vector}					Returns the clone of itself, modified
-     */
-    multiplyNew(vector) {
-      let v = this.clone();
-      return v.multiply(vector);
-    }
+                var pos = 0, ver = 0, element_width = element.offsetWidth;
+                var rect_main = document.getElementById(selector);
 
-    /**
-     * Multiplies the vector by a scalar.
-     *
-     * @public
-     * @chainable
-     * @param  {number}  scalar The scalar to multiply both x and y by
-     * @return {Vector}					Returns itself, modified
-     */
-    multiplyScalar(scalar) {
-      var v = new Vector(scalar, scalar);
-      return this.multiply(v);
-    }
-    /**
-     * Clones the vector and multiplies it by the provided scalar.
-     *
-     * @public
-     * @chainable
-     * @param  {number}  scalar The scalar to multiply both x and y by
-     * @return {Vector}					Returns the clone of itself, modified
-     */
-    multiplyScalarNew(scalar) {
-      let v = this.clone();
-      return v.multiplyScalar(scalar);
-    }
+                // Change particle size
+                function ChangeParticle(particle)
+                {
 
-    /**
-     * Alias of {@link Vector#multiplyScalar__anchor multiplyScalar}
-     */
-    scale(scalar) {
-      return this.multiplyScalar(scalar);
-    }
-    /**
-     * Alias of {@link Vector#multiplyScalarNew__anchor multiplyScalarNew}
-     */
-    scaleNew(scalar) {
-      return this.multiplyScalarNew(scalar);
-    }
+                    // Check if random color is enabled, change particle color when colides
+                    if(particle_background == "random") { particle.style.backgroundColor = getRandomColor(); }
 
-    /**
-     * Rotates a vecor by a given amount, provided in radians.
-     *
-     * @public
-     * @chainable
-     * @param  {number}  radian The angle, in radians, to rotate the vector by
-     * @return {Vector}					Returns itself, modified
-     */
-    rotate(radian) {
-      var x = (this.x * Math.cos(radian)) - (this.y * Math.sin(radian));
-      var y = (this.x * Math.sin(radian)) + (this.y * Math.cos(radian));
+                    // Get random number based on the width and height of main div
+                    var RandomWidth = Math.random() * (particle_maxwidth - particle_minwidth) + particle_minwidth;
+                    particle.style.width = RandomWidth+"px";
+                    particle.style.height = RandomWidth+"px";
 
-      this.x = x;
-      this.y = y;
+                }
 
-      return this;
-    }
-    /**
-     * Clones the vector and rotates it by the supplied radian value
-     *
-     * @public
-     * @chainable
-     * @param  {number}  radian The angle, in radians, to rotate the vector by
-     * @return {Vector}					Returns the clone of itself, modified
-     */
-    rotateNew(radian) {
-      let v = this.clone();
-      return v.rotate(radian);
-    }
+                // Set frame to move particle
+                function SetFrame() {
 
-    /**
-     * Rotates a vecor by a given amount, provided in degrees. Converts the degree
-     * value to radians and runs the rotaet method.
-     *
-     * @public
-     * @chainable
-     * @param  {number}  degrees The angle, in degrees, to rotate the vector by
-     * @return {Vector}						Returns itself, modified
-     */
-    rotateDeg(degrees) {
-      return this.rotate(degreesToRadian(degrees));
-    }
-    /**
-     * Clones the vector and rotates it by the supplied degree value
-     *
-     * @public
-     * @chainable
-     * @param  {number}  degrees The angle, in degrees, to rotate the vector by
-     * @return {Vector}					 Returns the clone of itself, modified
-     */
-    rotateDegNew(degrees) {
-      return this.rotateNew(degreesToRadian(degrees));
-    }
+                    if (isPlaying) setTimeout(SetFrame, 1000 / fps);
 
-    /**
-     * Alias of {@link Vector#rotate__anchor rotate}
-     */
-    rotateBy(radian) {
-      return this.rotate(radian);
-    }
-    /**
-     * Alias of {@link Vector#rotateNew__anchor rotateNew}
-     */
-    rotateByNew(radian) {
-      return this.rotateNew(radian);
-    }
+                    // Element offset positioning
+                    pos = element.offsetTop;
+                    ver = element.offsetLeft;
 
-    /**
-     * Alias of {@link Vector#rotateDeg__anchor rotateDeg}
-     */
-    rotateDegBy(degrees) {
-      return this.rotateDeg(degrees);
-    }
-    /**
-     * Alias of {@link Vector#rotateDegNew__anchor rotateDegNew}
-     */
-    rotateDegByNew(radian) {
-      return tjos.rotateDegNew(radian);
-    }
+                    // Check colision bounds
+                    if(pos == rect_main.offsetHeight-element_width) {
+                        d_v = "top";
+                        pos = rect_main.offsetHeight-element_width;
+                        isresting = 1;
+                        if(particle_colision_change == true) { ChangeParticle(element); } // Change Particle Size on colision
+                    }
+                    if(pos <= 0){
+                        d_v = "down";
+                        pos = 0;
+                        isresting = 1;
+                        if(particle_colision_change == true) { ChangeParticle(element); } // Change Particle Size on colision
+                    }
+                    if(ver == rect_main.offsetWidth-element_width){
+                        d_h = "left";
+                        ver = rect_main.offsetWidth-element_width;
+                        isresting = 1;
+                        if(particle_colision_change == true) { ChangeParticle(element); } // Change Particle Size on colision
+                    }
+                    if(ver <= 0){
+                        d_h = "right";
+                        ver = 0;
+                        isresting = 1;
+                        if(particle_colision_change == true) { ChangeParticle(element); } // Change Particle Size on colision
+                    }
 
-    /**
-     * Rotates a vector to a specific angle
-     *
-     * @public
-     * @chainable
-     * @param  {number}  radian The angle, in radians, to rotate the vector to
-     * @return {Vector}					Returns itself, modified
-     */
-    rotateTo(radian) {
-      return this.rotate(radian-this.angle);
-    };
-    /**
-     * Clones the vector and rotates it to the supplied radian value
-     *
-     * @public
-     * @chainable
-     * @param  {number}  radian The angle, in radians, to rotate the vector to
-     * @return {Vector}					Returns the clone of itself, modified
-     */
-    rotateToNew(radian) {
-      let v = this.clone();
-      return v.rotateTo(radian);
-    };
+                    // It won add another position until the end of transition
+                    if(isresting == 1)
+                    {
 
-    /**
-     * Rotates a vecor to a given amount, provided in degrees. Converts the degree
-     * value to radians and runs the rotateTo method.
-     *
-     * @public
-     * @chainable
-     * @param  {number}  degrees The angle, in degrees, to rotate the vector to
-     * @return {Vector}						Returns itself, modified
-     */
-    rotateToDeg(degrees) {
-      return this.rotateTo(degreesToRadian(degrees));
+                        var RandomTransitionTime = Math.floor(Math.random() * (max_transition_speed - min_transition_speed + 1)) + min_transition_speed;
+                        element.style.transitionDuration = RandomTransitionTime+"ms";
+
+                        // Check Position
+                        if(d_v == "down" && d_h == 'left')
+                        {
+                            element.style.left = Number(element.offsetLeft) - Number(300) + "px";
+                            element.style.top = rect_main.offsetHeight-Number(element_width) + "px";
+                            isresting = 0;
+                        }
+                        if(d_v == "down" && d_h == 'right')
+                        {
+                            element.style.left = Number(element.offsetLeft) + Number(300) + "px";
+                            element.style.top = rect_main.offsetHeight-Number(element_width) + "px";
+                            isresting = 0;
+
+                        }
+                        if(d_v == "top" && d_h == 'left')
+                        {
+                            element.style.left = Number(element.offsetLeft)-Number(element_width) - Number(300) + "px";
+                            element.style.top = "0px";
+                            isresting = 0;
+
+                        }
+                        if(d_v == "top" && d_h == 'right')
+                        {
+                            element.style.left = Number(element.offsetLeft)-Number(element_width) + Number(300) + "px";
+                            element.style.top = "0px";
+                            isresting = 0;
+                        }
+                    }
+
+                    // Saves particle position to array
+                    if(element.offsetLeft != 0 && element.offsetTop != 0) { particle_x_ray[element.id] = ({'id': element.id, 'x': element.offsetLeft, 'y': element.offsetTop}); }
+
+                }
+
+                // Call function for the first time
+                SetFrame();
+            };
+
+            // Set up particles to selector div
+            this.SetupParticles = function(number) {
+
+                var resp_particles;
+                particle_x_ray = [];
+
+                // Get window viewport inner width
+                var windowViewportWidth = window.innerWidth;
+
+                // If functions brings no number, it follow the default
+                if(number == undefined)
+                {
+
+                    // Loop responsive object to get current viewport
+                    for (var loop = 0; loop < responsive.length; loop++) {
+                        if(responsive[loop].breakpoint >= windowViewportWidth) { resp_particles = responsive[loop]["settings"].particle_number; }
+                    }
+
+                    // If there is no result from above, default particles are applied
+                    if(resp_particles == undefined) { resp_particles = this.particle_number; }
+
+                } else {
+                    resp_particles = number;
+                }
+
+                // Add number of particles to selector div
+                for (var i = 1; i <= resp_particles; i++) {
+
+                    // Generate random number to particles
+                    var random_id_particle = Math.floor(Math.random() * (9999 - 0 + 1)) + 0;
+
+                    // Check if image source is empty and append particle to main div
+                    if(this.particle_image['image'] == false)
+                    {
+                        document.getElementById(this.selector).insertAdjacentHTML('beforeend', "<div id='bvparticle_"+random_id_particle+"' class='bvambient_particle' style='display: block;'></div>");
+                    } else {
+                        document.getElementById(this.selector).insertAdjacentHTML('beforeend', "<img src='"+this.particle_image['src']+"' id='bvparticle_"+random_id_particle+"' class='bvambient_particle' style='display: block;'>");
+                    }
+
+                    var bvparticle = document.getElementById("bvparticle_"+random_id_particle);
+
+                    // Add
+                    particle_x_ray.push("bvparticle_"+random_id_particle);
+
+                    // Get Width and Height of main div
+                    var widthMainDiv = document.getElementById(selector);
+
+                    // Get random number based on the width and height of main div
+                    var RandomTopPosition = Math.floor(Math.random() * (widthMainDiv.offsetHeight - 40 + 1)) + 0;
+                    var RandomLeftPosition = Math.floor(Math.random() * (widthMainDiv.offsetWidth - 100 + 1)) + 0;
+
+                    // Get random number based on the width and height of main div
+                    var RandomWidth = Math.random() * (this.particle_maxwidth - this.particle_minwidth) + this.particle_minwidth;
+
+                    // Get Random Opacity between 0.2 and 1 if active
+                    if(particle_opacity == true) { var RandomOpacity = Math.random() * (1 - 0.2) + 0.2; } else { var RandomOpacity = 1; }
+
+                    // Add random positioning to particle
+                    bvparticle.style.top = RandomTopPosition+"px";
+                    bvparticle.style.left = RandomLeftPosition+"px";
+                    bvparticle.style.width = RandomWidth+"px";
+                    bvparticle.style.height = RandomWidth+"px";
+                    bvparticle.style.opacity = RandomOpacity;
+                    bvparticle.style.borderRadius = particle_radius+"px";
+
+                    // Check if it has random color enabled
+                    if(particle_background == "random") { bvparticle.style.backgroundColor = getRandomColor(); } else { bvparticle.style.backgroundColor = particle_background; }
+
+                    // Move particle
+                    this.MoveParticle(bvparticle);
+                }
+            }
+
+            // ** SETUP SLIDE **
+            this.SetupParticles();
+
+            if(refresh_onfocus == true){
+                // When user enters tab again refresh position
+                document.addEventListener('focus', (e) => {
+                    document.getElementById(selector).innerHTML = "";
+                    this.SetupParticles();
+                });}
+
+            // Refresh results
+            this.particle_x_ray = particle_x_ray;
+
+            // Generates a random hex color
+            function getRandomColor() {
+                var letters = '0123456789ABCDEF';
+                var color = '#';
+                for (var i = 0; i < 6; i++) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+                return color;
+            }
+        }
+
+        // ** METHODS **
+        // REFRESH PARTICLES
+        Refresh() {
+
+            // Remove all particles
+            document.getElementById(this.selector).innerHTML = "";
+            // Setup new Ambient
+            this.SetupParticles();
+        }
+
+        // DESTROY
+        Destroy() {
+
+            // Remove all particles and unbind all its events
+            document.getElementById(this.selector).remove();
+        }
+
+        // ADD PARTICLES
+        Add(number) {
+            if(number != undefined)
+            {
+                // Add new particles
+                this.SetupParticles(number);
+            }
+        }
+
+        // PAUSE
+        Controls(command)
+        {
+            // Check what type of command is
+            switch(command) {
+                case "pause": // Pause Particles moviment
+                    isPaused = true;
+                    break;
+                case "play": // Resume Particles moviment
+                    isPaused = false;
+                    break;
+                default:
+                    console.log("BVAmbient | Command not recognized.");
+            }
+        }
+
+        // CHANGE PARTICLES
+        Change(properties) {
+
+            // Changes particles according to properties available
+            if(properties.type == "particle_background")
+            {
+                document.querySelectorAll('.bvambient_particle').forEach((item) => {
+                    // Change to chosen color
+                    item.style.backgroundColor = properties.value;
+                });
+            } else { console.log("BVAmbient | Propertie not recognized."); }
+        }
     }
-    /**
-     * Clones the vector and rotates it to the supplied degree value
-     *
-     * @public
-     * @chainable
-     * @param  {number}  degrees The angle, in degrees, to rotate the vector to
-     * @return {Vector}					 Returns the clone of itself, modified
-     */
-    rotateToDegNew(degrees) {
-      return this.rotateToNew(degreesToRadian(degrees));
-    }
-
-    /**
-     * Normalises the vector down to a length of 1 unit
-     *
-     * @public
-     * @chainable
-     * @return {Vector}					Returns itself, modified
-     */
-    normalise() {
-      return this.divideScalar(this.length);
-    }
-    /**
-     * Clones the vector and normalises it
-     *
-     * @public
-     * @chainable
-     * @return {Vector}					Returns a clone of itself, modified
-     */
-    normaliseNew() {
-      return this.divideScalarNew(this.length);
-    }
-
-    /**
-     * Calculates the distance between this and the supplied vector
-     *
-     * @param  {Vector} vector The vector to calculate the distance from
-     * @return {number}        The distance between this and the supplied vector
-     */
-    distance(vector) {
-      return this.subtractNew(vector).length;
-    }
-
-    /**
-     * Calculates the distance on the X axis between this and the supplied vector
-     *
-     * @param  {Vector} vector The vector to calculate the distance from
-     * @return {number}        The distance, along the x axis, between this and the supplied vector
-     */
-    distanceX(vector) {
-      return this.x - vector.x;
-    }
-
-    /**
-     * Calculated the distance on the Y axis between this and the supplied vector
-     *
-     * @param  {Vector} vector The vector to calculate the distance from
-     * @return {number}        The distance, along the y axis, between this and the supplied vector
-     */
-    distanceY(vector) {
-      return this.y - vector.y;
-    }
-
-
-    /**
-     * Calculates the dot product between this and a supplied vector
-     *
-     * @example
-     * // returns -14
-     * new Vector(2, -3).dot(new Vector(-4, 2))
-     * new Vector(-4, 2).dot(new Vector(2, -3))
-     * new Vector(2, -4).dot(new Vector(-3, 2))
-     *
-     * @param  {Vector} vector The vector object against which to calculate the dot product
-     * @return {number}        The dot product of the two vectors
-     */
-    dot(vector) {
-      return (this.x * vector.x) + (this.y * vector.y);
-    }
-
-    /**
-     * Calculates the cross product between this and the supplied vector.
-     *
-     * @example
-     * // returns -2
-     * new Vector(2, -3).cross(new Vector(-4, 2))
-     * new Vector(-4, 2).cross(new Vector(2, -3))
-     * // returns 2
-     * new Vector(2, -4).cross(new Vector(-3, 2))
-     *
-     * @param  {Vector} vector The vector object against which to calculate the cross product
-     * @return {number}        The cross product of the two vectors
-     */
-    cross(vector) {
-      return (this.x * vector.x) - (this.y * vector.y);
-    }
-
-
-    /**
-     * Getters and setters
-     */
-
-    /**
-     * (getter/setter) The x value of the vector.
-     *
-     * @type {number}
-     * @default 0
-     */
-    set x(x) {
-      if(typeof x == 'number') {
-        this._x = x;
-      } else {
-        throw new TypeError('X should be a number');
-      }
-    }
-    get x() {
-      return this._x || 0;
-    }
-
-    /**
-     * (getter/setter) The y value of the vector.
-     *
-     * @type {number}
-     * @default 0
-     */
-    set y(y) {
-      if(typeof y == 'number') {
-        this._y = y;
-      } else {
-        throw new TypeError('Y should be a number');
-      }
-    }
-    get y() {
-      return this._y || 0;
-    }
-
-    /**
-     * (getter/setter) The length of the vector presented as a square. If you're using
-     * length for comparison, this is quicker.
-     *
-     * @type {number}
-     * @default 0
-     */
-    set lengthSquared(length) {
-      var factor;
-      if(typeof length == 'number') {
-        factor = length / this.lengthSquared;
-        this.multiplyScalar(factor);
-      } else {
-        throw new TypeError('length should be a number');
-      }
-    }
-    get lengthSquared() {
-      return (this.x * this.x) + (this.y * this.y);
-    }
-
-    /**
-     * (getter/setter) The length of the vector
-     *
-     * @type {number}
-     * @default 0
-     */
-    set length(length) {
-      var factor;
-      if(typeof length == 'number') {
-        factor = length / this.length;
-        this.multiplyScalar(factor);
-      } else {
-        throw new TypeError('length should be a number');
-      }
-    }
-    get length() {
-      return Math.sqrt(this.lengthSquared);
-    }
-
-    /**
-     * (getter/setter) The angle of the vector, in radians
-     *
-     * @type {number}
-     * @default 0
-     */
-    set angle(radian) {
-      if(typeof radian == 'number') {
-        this.rotateTo(radian);
-      } else {
-        throw new TypeError('angle should be a number');
-      }
-    }
-    get angle() {
-      return Math.atan2(this.y, this.x);
-    }
-
-    /**
-     * (getter/setter) The angle of the vector, in radians
-     *
-     * @type {number}
-     * @default 0
-     */
-    set angleInDegrees(degrees) {
-      if(typeof degrees == 'number') {
-        this.rotateToDeg(degrees);
-      } else {
-        throw new TypeError('angle should be a number');
-      }
-    }
-    get angleInDegrees() {
-      return radianToDegrees(Math.atan2(this.y, this.x));
-    }
-
-    /**
-     * (getter/setter) Vector width.
-     * Alias of {@link Vector#x x}
-     *
-     * @type {number}
-     */
-    set width(w) {
-      this.x = w;
-    }
-    get width() {
-      return this.x;
-    }
-
-    /**
-     * (getter/setter) Vector height.
-     * Alias of {@link Vector#x x}
-     *
-     * @type {number}
-     */
-    set height(h) {
-      this.y = h;
-    }
-    get height() {
-      return this.y;
-    }
-
-    /**
-     * (getter/setter) Vector area.
-     * @readonly
-     *
-     * @type {number}
-     */
-    get area() {
-      return this.x * this.y;
-    }
-
-    /**
-     * (getter/setter) Vector slope.
-     *
-     * @type {number}
-     */
-    set slope(value) {
-      if(!isNaN(value)) {
-        let angle = Math.atan(value);
-        this.angle = angle;
-      }
-    }
-    get slope() {
-      return this.y / this.x;
-    }
-
-  }
-
-
-</script>
-<script>
-  class Simulation {
-    constructor(el) {
-      if(el instanceof HTMLElement && el.nodeName.toLowerCase() === 'canvas') {
-        this.el = el;
-        this.ctx = el.getContext('2d');
-
-        this.bodies = [];
-
-        this.run = this.run.bind(this);
-      } else {
-        return null;
-      }
-    }
-
-    addBody(body) {
-      if(body instanceof Body) {
-        body.yearsPerFrame = this.yearsPerFrame;
-        body.dimensions = this.pxdimensions;
-        this.bodies.push(body);
-      }
-      return this.bodies.length-1;
-    }
-    removeBody(i) {
-      this.bodies.splice(i,1);
-    }
-
-    update() {
-      // Set up the canvas for drawing
-      this.ctx.fillStyle = `rgba(0,10,20,.9)`;
-      // this.ctx.clearRect(0,0,this.el.width,this.el.height);
-      this.ctx.fillRect(0,0,this.el.width,this.el.height);
-      this.ctx.translate(this.pxdimensions.width*.5, this.pxdimensions.height*.5);
-
-
-      const lineThreshold = 80000;
-
-      // Loop through all of the bodies
-      this.bodies.forEach((bodyX) => {
-        const acceleration = new Vector(0,0); // This is our basal, new acceleration for this body
-        // For all the other bodies, calculate the combined force asserted on this
-        this.bodies.forEach((bodyY) => {
-          const distance = bodyY.position.subtractNew(bodyX.position); // The distance between the two bodies
-          const sqD = distance.lengthSquared; // The distance squared (cheaper than calculating actual distance, see: Pythagoras)
-          const force = (this.gravitationalConstant * bodyY.mass) / (sqD * Math.sqrt(sqD * this.smoothing)); // Here's some newtonian motion with a some softening to stop it from reaching infinity
-
-          acceleration.add(distance.scale(force));
-
-          if(sqD < lineThreshold) {
-            this.ctx.beginPath();
-            this.ctx.strokeStyle = `rgba(255,255,255,${((lineThreshold-sqD)/lineThreshold)*.5})`;
-            this.ctx.lineWidth = 0;
-            this.ctx.moveTo(bodyX.position.x, bodyX.position.y);
-            this.ctx.lineTo(bodyY.position.x, bodyY.position.y);
-            this.ctx.stroke();
-          }
+    document.addEventListener("DOMContentLoaded", function() {
+        var demo1 = new BVAmbient({
+            selector: "#ambient",
+            fps: 60,
+            max_transition_speed: 12000,
+            min_transition_speed: 8000,
+            particle_number: 30,
+            particle_maxwidth: 60,
+            particle_minwidth: 10,
+            particle_radius: 50,
+            particle_opacity: true,
+            particle_colision_change: true,
+            particle_background: "#58c70c",
+            refresh_onfocus: true,
+            particle_image: {
+                image: false,
+                src: ""
+            },
+            responsive: [
+                {
+                    breakpoint: 768,
+                    settings: {
+                        particle_number: "15"
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        particle_number: "10"
+                    }
+                }
+            ]
         });
-        // Update the basal body's accelaration with the calucalted factor
-        bodyX.acceleration = acceleration;
-
-        // Draw the body
-        this.ctx.beginPath();
-        this.ctx.fillStyle = `rgba(200,255,255,1)`;
-        this.ctx.arc(bodyX.position.x, bodyX.position.y, bodyX.size, 0, 2 * Math.PI);
-        this.ctx.fill();
-
-        // Solve for the next frame
-        bodyX.solve();
-      });
-      // Reset current transformation matrix to the identity matrix
-      this.ctx.setTransform(1, 0, 0, 1, 0, 0);
-    }
-
-    run(delta) {
-      if(this.running === true) {
-        requestAnimationFrame(this.run);
-      }
-
-      this.update();
-    }
-
-    set running(value) {
-      if(this.running === false && value === true) requestAnimationFrame(this.run);
-      this._running = value === true;
-    }
-    get running() {
-      return this._running === true;
-    }
-
-    set pxratio(value) {
-      if(!isNaN(value)) {
-        this._pxratio = value;
-      }
-    }
-    get pxratio() {
-      return this._pxratio || 1;
-    }
-
-    set dimensions(value) {
-      if(value instanceof Vector) {
-        this._dimensions = value;
-        this._pxdimensions = value.scale(this.pxratio);
-        this.el.width = this._pxdimensions.width;
-        this.el.height = this._pxdimensions.height;
-
-        // Set up the canvas for drawing
-        this.ctx.fillStyle = `rgba(20,20,20,1)`;
-        // this.ctx.clearRect(0,0,this.el.width,this.el.height);
-        this.ctx.fillRect(0,0,this.el.width,this.el.height);
-      }
-    }
-    get dimensions() {
-      return this._dimensions || new Vector(this.el.width/this.pxratio, this.el.height/this.pxratio);
-    }
-
-    get pxdimensions() {
-      return this._pxdimensions || new Vector(this.el.width, this.el.height);
-    }
-
-    set gravitationalConstant(value) {
-      if(!isNaN(value)) this._gravitationalConstant = value;
-    }
-    get gravitationalConstant() {
-      return this._gravitationalConstant || 40;
-    }
-
-    set smoothing(value) {
-      if(!isNaN(value)) this._smoothing = value;
-    }
-    get smoothing() {
-      return this._smoothing || .5;
-    }
-
-    set yearsPerFrame(value) {
-      if(!isNaN(value)) this._yearsPerFrame = value;
-    }
-    get yearsPerFrame() {
-      return this._yearsPerFrame || .2;
-    }
-  }
-
-  class Body {
-    constructor(position, velocity, mass, size, fixed = false) {
-      this.position = position;
-      this.velocity = velocity;
-      this.acceleration = new Vector(0,0);
-      this.mass = mass;
-      this.size = size;
-      this.fixed = fixed;
-    }
-
-    solve() {
-      if(this.fixed) return;
-      // console.log(this.acceleration)
-      let vel= this.velocity.addNew(this.acceleration.scaleNew(this.yearsPerFrame));
-      this.velocity = vel;
-      this.position.add(this.velocity.scaleNew(this.yearsPerFrame));
-      if(this.position.x > this.dimensions.x * .5 + 30.) {
-        this.position.x = this.dimensions.x * -.5 - 10.;
-      } else if(this.position.x < this.dimensions.x * -.5 - 30.) {
-        this.position.x = this.dimensions.x * .5 + 10.;
-      }
-      if(this.position.y > this.dimensions.y * .5 + 30.) {
-        this.position.y = this.dimensions.y * -.5 - 10.;
-      } else if(this.position.y < this.dimensions.y * -.5 - 30.) {
-        this.position.y = this.dimensions.y * .5 + 10.;
-      }
-    }
-
-    set fixed(value) {
-      this._fixed = value === true;
-    }
-    get fixed() {
-      return this._fixed === true;
-    }
-
-    set position(value) {
-      if(value instanceof Vector) {
-        this._position = value;
-      }
-    }
-    get position() {
-      return this._position || null;
-    }
-
-    set friction(value) {
-      if(!isNaN(value)) {
-        this._friction = value;
-      }
-    }
-    get friction() {
-      return this._friction || .99;
-    }
-
-    set maxVelocity(value) {
-      if(!isNaN(value)) {
-        this._maxVelocity = value;
-      }
-    }
-    get maxVelocity() {
-      return this._maxVelocity || 50.;
-    }
-
-    set velocity(value) {
-      if(value instanceof Vector) {
-        if(value.length > this.maxVelocity) value.normalise().scale(this.maxVelocity);
-        value.scale(this.friction);
-        this._velocity = value;
-      }
-    }
-    get velocity() {
-      return this._velocity || null;
-    }
-
-    set acceleration(value) {
-      if(value instanceof Vector) {
-        this._acceleration = value;
-      }
-    }
-    get acceleration() {
-      return this._acceleration || null;
-    }
-
-    set mass(value) {
-      if(!isNaN(value)) {
-        this._mass = value;
-      }
-    }
-    get mass() {
-      return this._mass || 0;
-    }
-
-    set size(value) {
-      if(!isNaN(value)) {
-        this._size = value;
-      }
-    }
-    get size() {
-      return this._size || 0;
-    }
-
-    set yearsPerFrame(value) {
-      if(!isNaN(value)) this._yearsPerFrame = value;
-    }
-    get yearsPerFrame() {
-      return this._yearsPerFrame || .008;
-    }
-  }
-
-  //console.clear();
-
-  const sim = new Simulation(document.querySelector('canvas'));
-  sim.dimensions = new Vector(window.innerWidth, window.innerHeight);
-  console.log(sim.dimensions)
-  window.addEventListener('resize', (e) => {
-    sim.dimensions = new Vector(window.innerWidth, window.innerHeight);
-  });
-
-  let mouseBody = new Body(new Vector(0, 0), new Vector(0,0), -1000, 50, true);
-  let bodyIndex = null;
-  window.addEventListener('pointerdown', (e) => {
-    mouseBody.position.x = e.pageX - window.innerWidth * .5;
-    mouseBody.position.y = e.pageY - window.innerHeight * .5;
-    console.log(mouseBody.position);
-    bodyIndex = sim.addBody(mouseBody);
-  });
-  window.addEventListener('pointermove', (e) => {
-    mouseBody.position.x = e.pageX - window.innerWidth * .5;
-    mouseBody.position.y = e.pageY - window.innerHeight * .5;
-  });
-  window.addEventListener('pointerup', (e) => {
-    sim.removeBody(bodyIndex);
-    bodyIndex = null;
-  });
-
-  // sim.addBody(new Body(new Vector(0, 0), new Vector(0,0), -3, 50, true));
-  // sim.addBody(new Body(new Vector(0, 500), new Vector(0,0), 1, 10, true));
-
-  for(i=0;i<window.innerWidth * window.innerHeight * 0.00008;i++) {
-    const r = new Vector(400 + Math.random() * 500, Math.random() * Math.PI * 2.);
-    const p = new Vector(Math.cos(r.y) * r.x, Math.sin(r.y) * r.x);
-    const a = new Vector(p.y, -p.x).normalise().scale(10.);
-    // const a = new Vector(0,0);
-    const rf = Math.random();
-    sim.addBody(new Body(p, a, -10 + rf * 15., 1 + rf * 10));
-    // sim.addBody(new Body(p, a, .5 + rf * .5, 5 + rf * 5.));
-
-  }
-
-  sim.running = true;
+    });
 </script>
+
+
+
 
 <div class="card-back">
-  <h1>Clash配置文件融合</h1>
+    <h1>Clash配置融合</h1>
 
-  <!-- 解码部分 -->
-  <div id="input-container">
-    <!-- 初始输入框 -->
-    <div class="input-group">
-      <input type="text" class="input-field" placeholder="粘贴订阅链接">
+    <!-- 解码部分 -->
+    <div id="input-container">
+        <!-- 初始输入框 -->
+        <div class="input-group">
+            <input type="text" class="input-field" placeholder="粘贴订阅链接">
+        </div>
     </div>
-  </div>
 
-  <div class="input-group">
-    <button onclick="addInput()">➕</button>
-    <button onclick="copyLink()">融合配置</button>
+    <div class="input-group">
+        <button onclick="addInput()">➕</button>
+        <button onclick="copyLink()">融合配置</button>
 
-  </div>
-  <div class="input-group">
-    <div id="qrcode"></div>
-  </div>
+    </div>
 
+
+    <div id="qrcode">
+        <img src="https://4evergr8.github.io/resources/icon.png" alt="示例图片" id="random">
+    </div>
 
 
 </div>
 
 
 <script>
-  // 获取输入框容器
-  const inputContainer = document.getElementById('input-container');
-
-  // 添加输入框
-  function addInput() {
-    // 获取最后一个输入组
-    const lastInputGroup = inputContainer.lastElementChild;
-
-    // 创建新的输入组
-    const newInputGroup = document.createElement('div');
-    newInputGroup.className = 'input-group';
-
-    // 创建新的输入框
-    const newInput = document.createElement('input');
-    newInput.type = 'text';
-    newInput.className = 'input-field';
-    newInput.placeholder = '粘贴订阅链接';
-
-    // 创建逗号按钮
-    const commaButton = document.createElement('button');
-    commaButton.disabled = true; // 禁用按钮
-    commaButton.textContent = '，'; // 逗号表情符号
-    commaButton.className = 'comma-button';
-
-    // 将逗号按钮添加到上一个输入组的末尾
-    if (lastInputGroup) {
-      lastInputGroup.appendChild(commaButton);
+    function getRandomImage() {
+        var totalImages = 52; // 假设有268张图片（001.jpg到268.jpg）
+        var randomIndex = Math.floor(Math.random() * totalImages) + 1; // 随机获取索引
+        var imagePath = 'https://4evergr8.github.io/resources/jpgs/' + randomIndex.toString().padStart(3, '0') + '.jpg'; // 使用 padStart 处理序号
+        document.getElementById('random').src = imagePath; // 设置图片源
     }
 
-    // 将新的输入框添加到新的输入组
-    newInputGroup.appendChild(newInput);
 
-    // 将新的输入组添加到容器中
-    inputContainer.appendChild(newInputGroup);
-  }
 
-  // 复制链接到剪贴板
-  function copyLink() {
-    const inputs = document.querySelectorAll('.input-field');
-    const links = Array.from(inputs).map(input => input.value.trim()).filter(value => value !== '');
-    const combinedLinks = links.join(',');
 
-    const link = `${window.location.origin}/?links=${encodeURIComponent(combinedLinks)}`;
+
+
+
+
+
+
+
+    getRandomImage();
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function generateQRCode(link) {
+        // 清空之前的二维码
+        document.getElementById("qrcode").innerHTML = "";
+
+        // 生成新的二维码
+        new QRCode(document.getElementById("qrcode"), {
+            text: link,
+            colorDark: "#000000", // 深色部分颜色
+            colorLight: "#ffffff", // 浅色部分颜色
+            correctLevel: QRCode.CorrectLevel.H // 纠错等级
+        });
+    }
+
+
+
+
+    // 获取输入框容器
+    const inputContainer = document.getElementById('input-container');
+
+    // 添加输入框
+    function addInput() {
+        if(document.getElementById("qrcode")){document.getElementById("qrcode").remove()}
+
+        const lastInputGroup = inputContainer.lastElementChild;
+
+
+        const newInputGroup = document.createElement('div');
+        newInputGroup.className = 'input-group';
+
+
+        const newInput = document.createElement('input');
+        newInput.type = 'text';
+        newInput.className = 'input-field';
+        newInput.placeholder = '粘贴订阅链接';
+
+        const commaButton = document.createElement('button');
+        commaButton.disabled = true; // 禁用按钮
+        commaButton.textContent = '，'; // 逗号表情符号
+        commaButton.className = 'comma-button';
+
+
+        if (lastInputGroup) {
+            lastInputGroup.appendChild(commaButton);
+        }
+
+
+        newInputGroup.appendChild(newInput);
+
+
+        inputContainer.appendChild(newInputGroup);
+    }
 
     // 复制链接到剪贴板
-    navigator.clipboard.writeText(link);
-    console.log(link);
-    function generateQRCode() {
-      document.getElementById("qrcode").innerHTML = "";
-      new QRCode(document.getElementById("qrcode"), {
-        text: link,
-        width: 300,
-        height: 300,
-        correctLevel: QRCode.CorrectLevel.H
-      });
-    }
+    function copyLink() {
+        const inputs = document.querySelectorAll('.input-field');
+        const links = Array.from(inputs).map(input => input.value.trim()).filter(value => value !== '');
+        const combinedLinks = links.join(',');
 
-    document.getElementById("qrcode").innerHTML = "";
-    generateQRCode();
-  }
+        const link = `${window.location.origin}/?links=${encodeURIComponent(combinedLinks)}`;
+
+        // 复制链接到剪贴板
+        navigator.clipboard.writeText(link);
+        window.location.href = `clash://install-config?url=${link}`
+        console.log(link);
+
+
+
+        generateQRCode(link);
+    }
 </script>
 </body>
 </html>
