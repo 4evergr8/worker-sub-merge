@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Clash配置融合</title>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
 
 
@@ -1177,11 +1177,19 @@
     // 复制链接到剪贴板
     navigator.clipboard.writeText(link);
     console.log(link);
-    var qr = qrcode(8, "L");
-    qr.addData(link);
-    qr.
-    qr.make();
-    document.getElementById("qrcode").innerHTML = qr.createImgTag();
+    function generateQRCode() {
+
+      // 生成新的二维码
+      new QRCode(document.getElementById("qrcode"), {
+        text: link,
+        width: 300,
+        height: 300,
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    }
+
+    document.getElementById("qrcode").innerHTML = "";
+    generateQRCode();
   }
 </script>
 </body>
