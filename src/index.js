@@ -111,8 +111,6 @@ dns:
     domain:
 
 `
-
-
 let post = `
 
 rule-providers:
@@ -322,8 +320,8 @@ rules:
   - MATCH,🚀 节点选择
 
 `
-
 let warnings = ''
+let contentDisposition;
 
 
 
@@ -338,35 +336,39 @@ addEventListener('fetch', event => {
 });
 
 async function handleRequest(request) {
+
+
+
+
+
+
+
+
 	const url = new URL(request.url);
 	const links = url.searchParams.get('links'); // 获取查询参数中的 links 值
 	const linkArray = links.split(','); // 假设链接之间用逗号分隔
 	const resultString = linkArray.map(link => `#${link}\n`).join('');
 	warnings += resultString;
 
-	const headers = {
-		'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-	};
+	const headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'};
 
 
 	const fetchPromises = linkArray.map(link => fetch(link, { headers }).then(response => response.text()));
 	const results = await Promise.all(fetchPromises);
 
-	let mergedproxies = { proxies: [] }; // 初始化为包含空数组的对象
+	let mergedProxies = { proxies: [] }; // 初始化为包含空数组的对象
 
 	results.forEach(result => {
 		try {
 			let proxies = yaml.load(result).proxies;
-			mergedproxies.proxies = [...mergedproxies.proxies, ...proxies];
+			mergedProxies.proxies = [...mergedProxies.proxies, ...proxies];
 		} catch (error) {
 			console.error("解析 YAML 时出错:", error);
 		}
 	});
 
-	const proxyNames = mergedproxies.proxies.map(proxy => proxy.name);
-
-
-	mergedproxies['proxy-groups'] = [];
+	const proxyNames = mergedProxies.proxies.map(proxy => proxy.name);
+	mergedProxies['proxy-groups'] = [];
 
 
 
@@ -384,54 +386,17 @@ async function handleRequest(request) {
 
 
 
-	mergedproxies['proxy-groups']= JSON.parse(group);
-	mergedproxies['proxy-groups'].forEach(group => {
-		group.proxies.push(...proxyNames);
-	});
+	mergedProxies['proxy-groups']= JSON.parse(group);
+	mergedProxies['proxy-groups'].forEach(group => {group.proxies.push(...proxyNames);});
 
-
-
-
-
-
-
-	//
-	// mergedproxies['proxy-groups'].push(		{
-	// 		name: "🚀 节点选择",
-	// 		type: "select",
-	// 		proxies: ['♻️ 故障转移', '⚖️ 负载均衡', ...proxyNames]
-	// 	},
-	// 	{
-	// 		name: "♻️ 故障转移",
-	// 		type: "fallback",
-	// 		url: "https://www.google.com/", // 检测地址
-	// 		interval: "300", // 检测间隔
-	// 		proxies: [...proxyNames]
-	// 	},
-	// 	{
-	//
-	// 		name: "⚖️ 负载均衡",
-	// 		type: "load-balance",
-	// 		strategy: "consistent-hashing",
-	// 		url: "https://www.google.com/", // 检测地址
-	// 		interval: "300",
-	// 		proxies: [...proxyNames]
-	//
-	// 	}
-	//
-	// );
-
-
-	const content = yaml.dump(mergedproxies);
+	const content = yaml.dump(mergedProxies);
 
 
 	try {
-		let readpre = await BACKUP.get('pre'); // 尝试从 KV 中获取 post
-
+		let readpre = await BACKUP.get('pre'); // 尝试从 KV 中获取 pre
 		if (readpre === null) {
 			warnings += '#KV配置成功，但无pre键\n';
 		}else {pre = readpre}
-
 	} catch (error) {
 		warnings += '#KV配置失败，使用默认pre值\n';
 	}
@@ -439,7 +404,6 @@ async function handleRequest(request) {
 
 	try {
 		let readpost = await BACKUP.get('post'); // 尝试从 KV 中获取 post
-
 		if (readpost === null) {
 			warnings += '#KV配置成功，但无post键\n';
 		}else {post = readpost}
@@ -449,77 +413,32 @@ async function handleRequest(request) {
 	}
 
 
-
-
-
-
-
-
-
 	try {
-		await BACKUP.put(Date.now().toString(), warnings+content, { expirationTTL:(14 * 24 * 60 * 60) });
-	} catch (error) {
-		warnings +='#保存备份失败\n'
+		await BACKUP.put(Date.now().toString(), warnings+content, { expirationTTL:(432000) });
+	} catch (error) {warnings +='#保存备份失败\n'}
 
-	}
-
+	const finalContent = warnings + pre + content + post;
 
 
 
 
-
-
-
-
-
-	const finalcontent = warnings + pre + content + post;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	// 设置 Content-Disposition
-	let contentDisposition;
 	if (linkArray.length === 1) {
-		// 如果只有一个链接，直接从第一次 fetch 的响应中获取 Content-Disposition
 		const response = await fetch(linkArray[0], { headers });
-		let originalContentDisposition = response.headers.get('Content-Disposition');
-		if (originalContentDisposition) {
-			contentDisposition = originalContentDisposition;
-		} else {
-			contentDisposition = `inline; filename="${new URL(linkArray[0]).hostname}"`;
-		}
+		contentDisposition = response.headers.get('Content-Disposition') || `inline; filename="${new URL(linkArray[0]).hostname}"`;
 	} else {
-		// 如果有多个链接，统一设置文件名为“融合配置”
-		contentDisposition = `inline; filename*=UTF-8''${encodeURIComponent('融合配置')}`;
+		contentDisposition = `inline; filename*=UTF-8''${encodeURIComponent('融合配置')}`;// 如果有多个链接，统一设置文件名为“融合配置”
 	}
 
-	// 返回合并后的内容
-	return new Response(finalcontent, {
+
+	return new Response(finalContent, {
 		status: 200,
 		headers: {
 			'Content-Type': 'text/plain; charset=utf-8',
 			'Content-Disposition': contentDisposition
 		}
 	});
+
+
+
+
 }
