@@ -12,6 +12,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@cfworker/web": "^5.0.6",
     "js-yaml": "^4.1.0"
   },
   "type": "module"
