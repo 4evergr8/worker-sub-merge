@@ -1123,7 +1123,10 @@
     <button onclick="copyLink()">融合配置</button>
 
   </div>
-  <div id="qrcode"></div>
+  <div class="input-group">
+    <div id="qrcode"></div>
+  </div>
+
 
 
 </div>
@@ -1178,8 +1181,7 @@
     navigator.clipboard.writeText(link);
     console.log(link);
     function generateQRCode() {
-
-      // 生成新的二维码
+      document.getElementById("qrcode").innerHTML = "";
       new QRCode(document.getElementById("qrcode"), {
         text: link,
         width: 300,
