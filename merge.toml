@@ -1,0 +1,4 @@
+name = "merge"
+main = "src/index.js"
+compatibility_date = "2025-03-12"
+
