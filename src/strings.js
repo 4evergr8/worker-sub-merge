@@ -60,8 +60,6 @@ dns:
 
 `
 
-
-
 export let group = `
 
     [
@@ -151,6 +149,7 @@ export let group = `
     ]
 
 `
+
 export let post = `
 
 rule-providers:
