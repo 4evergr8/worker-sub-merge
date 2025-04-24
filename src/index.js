@@ -4,11 +4,7 @@ import yaml from 'js-yaml';
 import {pre,post,group} from "./strings.js";
 import {html} from "./html.js";
 
-let warnings = ''
-let readpre = ''
-let readpost = ''
-let readgroup = ''
-let contentDisposition;
+
 
 
 
@@ -18,12 +14,27 @@ addEventListener('fetch', event => {
 
 async function handleRequest(request) {
 
+
+    let warnings = ''
+    let readpre = ''
+    let readpost = ''
+    let readgroup = ''
+    let contentDisposition;
+
+
+
     if (new URL(request.url).searchParams.has('links'))
     {
         const links = new URL(request.url).searchParams.get('links'); // 获取查询参数中的 links 值
         const linkArray = links.split(','); // 假设链接之间用逗号分隔
         const resultString = linkArray.map(link => `#${link}\n`).join('');
         warnings += resultString;
+        const now = new Date();
+        const str = `#${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}\n`;
+        warnings += str;
+
+
+
 
         const headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'};
 
