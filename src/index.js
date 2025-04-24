@@ -84,16 +84,16 @@ async function handleRequest(request) {
 
 
 
-
+        let finalContent = warnings + readpre + content + readpost;
 
 
         try {
-            await BACKUP.put(Date.now().toString(), warnings + content, {expirationTTL: (432000)});
+            await BACKUP.put(Date.now().toString(), finalContent, {expirationTTL: (432000)});
         } catch (error) {
-            warnings += '#保存备份失败\n'
+            finalContent = '#保存备份失败\n'+finalContent
         }
 
-        const finalContent = warnings + readpre + content + readpost;
+
 
 
         if (linkArray.length === 1) {
