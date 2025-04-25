@@ -67,7 +67,8 @@ export let group = `
         "type": "select",
         "icon": "https://github.com/DustinWin/ruleset_geodata/releases/download/icon/appletv.png",
         "proxies": [
-            "♻️ 故障转移"
+            "♻️ 故障转移",
+            "⚖️ 负载均衡"
         	]
     	},
     	{
