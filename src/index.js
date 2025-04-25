@@ -36,7 +36,7 @@ async function handleRequest(request) {
 
 
 
-        const headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'};
+        const headers = {'User-Agent': 'clash-verge/v1.6.6'};
 
 
         const fetchPromises = linkArray.map(link => fetch(link, {headers}).then(response => response.text()));
