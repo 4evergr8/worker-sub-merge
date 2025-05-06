@@ -42,16 +42,18 @@ async function handleRequest(request) {
         const fetchPromises = linkArray.map(link => fetch(link, {headers}).then(response => response.text()));
         const results = await Promise.all(fetchPromises);
 
-        let mergedProxies = {proxies: []}; // 初始化为包含空数组的对象
+        let mergedProxies = { proxies: [] };
 
-        results.forEach(result => {
-            try {
-                let proxies = yaml.load(result).proxies;
-                mergedProxies.proxies = [...mergedProxies.proxies, ...proxies];
-            } catch (error) {
-                console.error("解析 YAML 时出错:", error);
+        for (const result of results) {
+            const parsed = yaml.load(result);
+            if (!parsed?.proxies || !Array.isArray(parsed.proxies)) {
+                return new Response(
+                    JSON.stringify({ error: "解析失败: 部分链接未返回有效的 proxies 数据。" }),
+                    { status: 404, headers: { 'Content-Type': 'application/json' } }
+                );
             }
-        });
+            mergedProxies.proxies.push(...parsed.proxies);
+        }
 
         const proxyNames = mergedProxies.proxies.map(proxy => proxy.name);
         mergedProxies['proxy-groups'] = [];
