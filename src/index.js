@@ -44,16 +44,40 @@ async function handleRequest(request) {
 
         let mergedProxies = { proxies: [] };
 
-        for (const result of results) {
-            const parsed = yaml.load(result);
-            if (!parsed?.proxies || !Array.isArray(parsed.proxies)) {
-                return new Response(
-                    JSON.stringify({ error: "解析失败: 部分链接未返回有效的 proxies 数据。" }),
-                    { status: 404, headers: { 'Content-Type': 'application/json' } }
-                );
+        for (let i = 0; i < results.length; i++) {
+            const result = results[i];
+            const link = linkArray[i];
+            let parsed;
+            try {
+                parsed = yaml.load(result);
+            } catch (e) {
+                parsed = null;
             }
+
+            if (!parsed?.proxies || !Array.isArray(parsed.proxies) || parsed.proxies.length === 0) {
+                const cached = await BACKUP.get(link);
+                if (!cached) {
+                    return new Response(
+                        JSON.stringify({ error: `链接无效且未找到缓存: ${link}` }),
+                        { status: 404, headers: { 'Content-Type': 'application/json' } }
+                    );
+                } else {
+                    try {
+                        parsed = yaml.load(cached);
+                    } catch (e) {
+                        return new Response(
+                            JSON.stringify({ error: `缓存内容解析失败: ${link}` }),
+                            { status: 500, headers: { 'Content-Type': 'application/json' } }
+                        );
+                    }
+                }
+            } else {
+                await BACKUP.put(link, result, { expirationTTL: 15552000 }); // 6个月
+            }
+
             mergedProxies.proxies.push(...parsed.proxies);
         }
+
 
         const proxyNames = mergedProxies.proxies.map(proxy => proxy.name);
         mergedProxies['proxy-groups'] = [];
@@ -105,6 +129,9 @@ async function handleRequest(request) {
         } catch (error) {
             finalContent = '#保存备份失败\n'+finalContent
         }
+
+
+
 
 
 
