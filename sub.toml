@@ -5,4 +5,4 @@ compatibility_date = "2025-03-12"
 # 添加 KV 命名空间
 [[kv_namespaces]]
 binding = "BACKUP"
-id = "2135f1e802cb4bbb8907f99ecd792a3b"
+id = "be22d7b5b00e48699f9b8c594a779947"
