@@ -48,6 +48,7 @@ async function handleRequest(request) {
             const result = results[i];
             const link = linkArray[i];
             let parsed;
+
             try {
                 parsed = yaml.load(result);
             } catch (e) {
@@ -61,16 +62,8 @@ async function handleRequest(request) {
                         JSON.stringify({ error: `链接无效且未找到缓存: ${link}` }),
                         { status: 404, headers: { 'Content-Type': 'application/json' } }
                     );
-                } else {
-                    try {
-                        parsed = yaml.load(cached);
-                    } catch (e) {
-                        return new Response(
-                            JSON.stringify({ error: `缓存内容解析失败: ${link}` }),
-                            { status: 500, headers: { 'Content-Type': 'application/json' } }
-                        );
-                    }
                 }
+                parsed = yaml.load(cached); // 这里不再 try-catch，假设缓存始终可解析
             } else {
                 await BACKUP.put(link, result, { expirationTTL: 15552000 }); // 6个月
             }
