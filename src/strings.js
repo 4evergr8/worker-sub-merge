@@ -65,7 +65,6 @@ export let group = `
     	{
         "name": "🚀 节点选择",
         "type": "select",
-        "icon": "https://github.com/DustinWin/ruleset_geodata/releases/download/icon/appletv.png",
         "proxies": [
             "♻️ 故障转移",
             "⚖️ 负载均衡"
@@ -99,7 +98,7 @@ export let group = `
         {
         "name": "♻️ 故障转移",
         "type": "fallback",
-        "url": "https://www.google.com/",
+        "url": "https://android.chat.openai.com",
         "interval": "300",
         "lazy": false,
         "proxies": [
@@ -108,8 +107,8 @@ export let group = `
         {
         "name": "⚖️ 负载均衡",
         "type": "load-balance",
-        "strategy": "consistent-hashing",
-        "url": "https://www.google.com/",
+        "strategy": "round-robin",
+        "url": "https://android.chat.openai.com",
         "interval": "300",
         "lazy": false,
         "proxies": [    
