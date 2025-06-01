@@ -101,7 +101,7 @@ export let group = `
         "url": "https://android.chat.openai.com",
         "interval": "300",
         "lazy": false,
-        "icon": 😁,
+        "icon": "😁",
         "proxies": [
             ]
         },
