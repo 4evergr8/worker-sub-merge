@@ -66,7 +66,7 @@ export let group = `
         "name": "🚀 节点选择",
         "type": "select",
         "proxies": [
-            "♻️ 故障转移",
+            "♻️ 自动选择",
             "⚖️ 负载均衡"
         	]
     	},
@@ -96,11 +96,12 @@ export let group = `
         	]
     	},
         {
-        "name": "♻️ 故障转移",
-        "type": "fallback",
+        "name": "♻️ 自动选择",
+        "type": "url-test",
         "url": "https://android.chat.openai.com",
         "interval": "300",
         "lazy": false,
+        "icon": 😁,
         "proxies": [
             ]
         },
