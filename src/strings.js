@@ -63,55 +63,77 @@ export let group = `
 
     [
     	{
-        "name": "🚀 节点选择",
+        "name": "节点选择",
         "type": "select",
         "proxies": [
-            "♻️ 自动选择",
-            "⚖️ 负载均衡"
+            "自动选择",
+            "轮询均衡",
+            "哈希均衡",
+            "粘性均衡"
         	]
     	},
     	{
-        "name": "🌍 全球直连",
+        "name": "全球直连",
         "type": "select",
         "proxies": [
             "DIRECT",
-            "🚀 节点选择"
+            "节点选择"
         	]
     	},
         {
-        "name": "🎣 漏网之鱼",
+        "name": "漏网之鱼",
         "type": "select",
         "proxies": [
-            "🚀 节点选择",
+            "节点选择",
             "DIRECT",
             "REJECT"
         	]
     	},
     	{
-        "name": "🚫全球拦截",
+        "name": "全球拦截",
         "type": "select",
         "proxies": [
             "REJECT",
-            "🚀 节点选择"
+            "节点选择"
         	]
     	},
         {
-        "name": "♻️ 自动选择",
+        "name": "自动选择",
         "type": "url-test",
         "url": "https://android.chat.openai.com",
         "interval": "300",
-        "lazy": false,
+        "lazy": true,
         "icon": "😁",
         "proxies": [
             ]
         },
         {
-        "name": "⚖️ 负载均衡",
+        "name": "轮询均衡",
         "type": "load-balance",
         "strategy": "round-robin",
         "url": "https://android.chat.openai.com",
         "interval": "300",
-        "lazy": false,
+        "lazy": true,
+        "proxies": [    
+            ]
+        },
+        {
+        "name": "哈希均衡",
+        "type": "load-balance",
+        "strategy": "consistent-hashing",
+        "url": "https://android.chat.openai.com",
+        "interval": "300",
+        "lazy": true,
+        "proxies": [    
+            ]
+        },
+        {
+        "name": "粘性均衡",
+        "type": "load-balance",
+        "strategy": "sticky-sessions",
+        "url": "https://android.chat.openai.com",
+        "interval": "300",
+        "lazy": true,
         "proxies": [    
             ]
         }
@@ -123,26 +145,26 @@ export let post = `
 
 
 rules:
-  - DOMAIN-REGEX,\\b(ads\\.|ad\\.)\\S+,🚫全球拦截
-  - DOMAIN-KEYWORD, .ad., 🚫全球拦截
-  - DOMAIN-KEYWORD, .ads., 🚫全球拦截
+  - DOMAIN-REGEX,\\b(ads\\.|ad\\.)\\S+,全球拦截
+  - DOMAIN-KEYWORD, .ad., 全球拦截
+  - DOMAIN-KEYWORD, .ads.,全球拦截
 
 
-  - DOMAIN-KEYWORD,twitter,🚀 节点选择
-  - DOMAIN-KEYWORD,telegra,🚀 节点选择
-  - DOMAIN-KEYWORD,google,🚀 节点选择
-  - DOMAIN-KEYWORD,github,🚀 节点选择
+  - DOMAIN-KEYWORD,twitter,节点选择
+  - DOMAIN-KEYWORD,telegra,节点选择
+  - DOMAIN-KEYWORD,google,节点选择
+  - DOMAIN-KEYWORD,github,节点选择
 
 
-  - GEOSITE,youtube,🚀 节点选择
-  - GEOIP,telegram,🚀 节点选择             
-  - GEOSITE,bilibili,🌍 全球直连
-  - GEOSITE,cn,🌍 全球直连
-  - GEOIP,cn,🌍 全球直连
+  - GEOSITE,youtube,节点选择
+  - GEOIP,telegram,节点选择             
+  - GEOSITE,bilibili,全球直连
+  - GEOSITE,cn,全球直连
+  - GEOIP,cn,全球直连
   - GEOSITE,private,DIRECT
   - GEOIP,private,DIRECT,no-resolve
 
   
-  - MATCH,🎣 漏网之鱼
+  - MATCH,漏网之鱼
 
 `
