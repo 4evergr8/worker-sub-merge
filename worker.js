@@ -2740,56 +2740,6 @@
   var js_yaml_default = jsYaml;
 
   // src/strings.js
-  var group = `
-
-    [
-    	{
-        "name": "\u{1F680} \u8282\u70B9\u9009\u62E9",
-        "type": "select",
-        "icon": "https://github.com/DustinWin/ruleset_geodata/releases/download/icon/appletv.png",
-        "proxies": [
-            "\u267B\uFE0F \u6545\u969C\u8F6C\u79FB",
-            "\u2696\uFE0F \u8D1F\u8F7D\u5747\u8861"
-        	]
-    	},
-    	{
-        "name": "\u{1F30D} \u5168\u7403\u76F4\u8FDE",
-        "type": "select",
-        "proxies": [
-            "DIRECT"
-        	]
-    	},
-    	{
-        "name": "\u{1F6AB}\u5168\u7403\u62E6\u622A",
-        "type": "select",
-        "proxies": [
-            "REJECT"
-        	]
-    	},
-        {
-            "name": "\u267B\uFE0F \u6545\u969C\u8F6C\u79FB",
-            "type": "fallback",
-            "url": "https://www.google.com/",
-            "interval": "300",
-            "lazy": false,
-            "proxies": [
-            
-            ]
-        },
-        {
-            "name": "\u2696\uFE0F \u8D1F\u8F7D\u5747\u8861",
-            "type": "load-balance",
-            "strategy": "consistent-hashing",
-            "url": "https://www.google.com/",
-            "interval": "300",
-            "lazy": false,
-            "proxies": [
-            
-            ]
-        }
-    ]
-
-`;
   var pre = `
 
 port: 7890
@@ -2850,213 +2800,112 @@ dns:
     domain:
 
 `;
+  var group = `
+
+    [
+    	{
+        "name": "\u8282\u70B9\u9009\u62E9",
+        "type": "select",
+        "proxies": [
+            "\u81EA\u52A8\u9009\u62E9",
+            "\u8F6E\u8BE2\u5747\u8861",
+            "\u54C8\u5E0C\u5747\u8861",
+            "\u7C98\u6027\u5747\u8861"
+        	]
+    	},
+    	{
+        "name": "\u5168\u7403\u76F4\u8FDE",
+        "type": "select",
+        "proxies": [
+            "DIRECT",
+            "\u8282\u70B9\u9009\u62E9"
+        	]
+    	},
+        {
+        "name": "\u6F0F\u7F51\u4E4B\u9C7C",
+        "type": "select",
+        "proxies": [
+            "\u8282\u70B9\u9009\u62E9",
+            "DIRECT",
+            "REJECT"
+        	]
+    	},
+    	{
+        "name": "\u5168\u7403\u62E6\u622A",
+        "type": "select",
+        "proxies": [
+            "REJECT",
+            "\u8282\u70B9\u9009\u62E9"
+        	]
+    	},
+        {
+        "name": "\u81EA\u52A8\u9009\u62E9",
+        "type": "url-test",
+        "url": "https://android.chat.openai.com",
+        "interval": "300",
+        "lazy": true,
+        "icon": "\u{1F601}",
+        "proxies": [
+            ]
+        },
+        {
+        "name": "\u8F6E\u8BE2\u5747\u8861",
+        "type": "load-balance",
+        "strategy": "round-robin",
+        "url": "https://android.chat.openai.com",
+        "interval": "300",
+        "lazy": true,
+        "proxies": [    
+            ]
+        },
+        {
+        "name": "\u54C8\u5E0C\u5747\u8861",
+        "type": "load-balance",
+        "strategy": "consistent-hashing",
+        "url": "https://android.chat.openai.com",
+        "interval": "300",
+        "lazy": true,
+        "proxies": [    
+            ]
+        },
+        {
+        "name": "\u7C98\u6027\u5747\u8861",
+        "type": "load-balance",
+        "strategy": "sticky-sessions",
+        "url": "https://android.chat.openai.com",
+        "interval": "300",
+        "lazy": true,
+        "proxies": [    
+            ]
+        }
+    ]
+
+`;
   var post = `
-
-rule-providers:
-  ads:
-    type: http
-    behavior: domain
-    format: mrs
-    proxy: \u267B\uFE0F \u6545\u969C\u8F6C\u79FB
-    path: ./rules/ads.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/ads.mrs"
-    interval: 86400
-  networktest:
-    type: http
-    behavior: classical
-    format: text
-    proxy: \u267B\uFE0F \u6545\u969C\u8F6C\u79FB
-    path: ./rules/networktest.list
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/networktest.list"
-    interval: 86400
-  tld-proxy:
-    type: http
-    behavior: domain
-    proxy: \u267B\uFE0F \u6545\u969C\u8F6C\u79FB
-    format: mrs
-    path: ./rules/tld-proxy.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/tld-proxy.mrs"
-    interval: 86400
-  proxy:
-    type: http
-    behavior: domain
-    proxy: \u267B\uFE0F \u6545\u969C\u8F6C\u79FB
-    format: mrs
-    path: ./rules/proxy.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/proxy.mrs"
-    interval: 86400
-  telegramip:
-    type: http
-    behavior: ipcidr
-    format: mrs
-    proxy: \u267B\uFE0F \u6545\u969C\u8F6C\u79FB
-    path: ./rules/telegramip.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/telegramip.mrs"
-    interval: 86400
-  
-  trackerslist:
-    type: http
-    behavior: domain
-    format: mrs
-    proxy: \u267B\uFE0F \u6545\u969C\u8F6C\u79FB
-    path: ./rules/trackerslist.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/trackerslist.mrs"
-    interval: 86400
-  youtube:
-    type: http
-    behavior: domain
-    proxy: \u267B\uFE0F \u6545\u969C\u8F6C\u79FB
-    format: mrs
-    path: ./rules/youtube.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/youtube.mrs"
-    interval: 86400
-
-  tiktok:
-    type: http
-    behavior: domain
-    format: mrs
-    proxy: \u267B\uFE0F \u6545\u969C\u8F6C\u79FB
-    path: ./rules/tiktok.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/tiktok.mrs"
-    interval: 86400
-  ai:
-    type: http
-    behavior: domain
-    format: mrs
-    proxy: \u267B\uFE0F \u6545\u969C\u8F6C\u79FB
-    path: ./rules/ai.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/ai.mrs"
-    interval: 86400
-  microsoft-cn:
-    type: http
-    behavior: domain
-    format: mrs
-    proxy: \u267B\uFE0F \u6545\u969C\u8F6C\u79FB
-    path: ./rules/microsoft-cn.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/microsoft-cn.mrs"
-    interval: 86400
-
-  google-cn:
-    type: http
-    behavior: domain
-    format: mrs
-    proxy: \u267B\uFE0F \u6545\u969C\u8F6C\u79FB
-    path: ./rules/google-cn.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/google-cn.mrs"
-    interval: 86400
-
-  games-cn:
-    type: http
-    behavior: domain
-    format: mrs
-    proxy: \u267B\uFE0F \u6545\u969C\u8F6C\u79FB
-    path: ./rules/games-cn.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/games-cn.mrs"
-    interval: 86400
-  applications:
-    type: http
-    behavior: classical
-    format: text
-    proxy: \u267B\uFE0F \u6545\u969C\u8F6C\u79FB
-    path: ./rules/applications.list
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/applications.list"
-    interval: 86400
-  bilibili:
-    type: http
-    behavior: domain
-    format: mrs
-    proxy: \u267B\uFE0F \u6545\u969C\u8F6C\u79FB
-    path: ./rules/bilibili.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/bilibili.mrs"
-    interval: 86400
-
-  tld-cn:
-    type: http
-    behavior: domain
-    format: mrs
-    proxy: \u267B\uFE0F \u6545\u969C\u8F6C\u79FB
-    path: ./rules/tld-cn.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/tld-cn.mrs"
-    interval: 86400
-
-  cn:
-    type: http
-    behavior: domain
-    format: mrs
-    proxy: \u267B\uFE0F \u6545\u969C\u8F6C\u79FB
-    path: ./rules/cn.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/cn.mrs"
-    interval: 86400
-
-  cnip:
-    type: http
-    behavior: ipcidr
-    format: mrs
-    proxy: \u267B\uFE0F \u6545\u969C\u8F6C\u79FB
-    path: ./rules/cnip.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/cnip.mrs"
-    interval: 86400
-  private:
-    type: http
-    behavior: domain
-    format: mrs
-    proxy: \u267B\uFE0F \u6545\u969C\u8F6C\u79FB
-    path: ./rules/private.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/private.mrs"
-    interval: 86400
-  privateip:
-    type: http
-    behavior: ipcidr
-    format: mrs
-    proxy: \u267B\uFE0F \u6545\u969C\u8F6C\u79FB
-    path: ./rules/privateip.mrs
-    url: "https://github.com/DustinWin/ruleset_geodata/releases/download/mihomo-ruleset/privateip.mrs"
-    interval: 86400
-
-
 
 
 rules:
-  - DOMAIN-REGEX,\\b(ads\\.|ad\\.)\\S+,\u{1F6AB}\u5168\u7403\u62E6\u622A
-  - DOMAIN-KEYWORD, .ad., \u{1F6AB}\u5168\u7403\u62E6\u622A
-  - DOMAIN-KEYWORD, .ads., \u{1F6AB}\u5168\u7403\u62E6\u622A
-  
-  - RULE-SET,ads,\u{1F6AB}\u5168\u7403\u62E6\u622A
-  - RULE-SET,networktest,\u{1F680} \u8282\u70B9\u9009\u62E9
-  - RULE-SET,tld-proxy,\u{1F680} \u8282\u70B9\u9009\u62E9
-  - RULE-SET,proxy,\u{1F680} \u8282\u70B9\u9009\u62E9
-  - RULE-SET,telegramip,\u{1F680} \u8282\u70B9\u9009\u62E9,no-resolve
-  - RULE-SET,trackerslist,\u{1F680} \u8282\u70B9\u9009\u62E9
-  - RULE-SET,youtube,\u{1F680} \u8282\u70B9\u9009\u62E9
-  - RULE-SET,tiktok,\u{1F680} \u8282\u70B9\u9009\u62E9
-  - RULE-SET,ai,\u{1F680} \u8282\u70B9\u9009\u62E9
-  - RULE-SET,microsoft-cn,\u{1F30D} \u5168\u7403\u76F4\u8FDE
-  - RULE-SET,google-cn,\u{1F30D} \u5168\u7403\u76F4\u8FDE
-  - RULE-SET,games-cn,\u{1F30D} \u5168\u7403\u76F4\u8FDE
-  - RULE-SET,applications,\u{1F30D} \u5168\u7403\u76F4\u8FDE
-  - RULE-SET,bilibili,\u{1F30D} \u5168\u7403\u76F4\u8FDE
-  - RULE-SET,tld-cn,\u{1F30D} \u5168\u7403\u76F4\u8FDE
-  - RULE-SET,cn,\u{1F30D} \u5168\u7403\u76F4\u8FDE
-  - RULE-SET,cnip,\u{1F30D} \u5168\u7403\u76F4\u8FDE
-  - RULE-SET,private,DIRECT
-  - RULE-SET,privateip,DIRECT,no-resolve
-  
+  - DOMAIN-REGEX,\\b(ads\\.|ad\\.)\\S+,\u5168\u7403\u62E6\u622A
+  - DOMAIN-KEYWORD, .ad., \u5168\u7403\u62E6\u622A
+  - DOMAIN-KEYWORD, .ads.,\u5168\u7403\u62E6\u622A
 
-  - DOMAIN-KEYWORD,github,\u{1F680} \u8282\u70B9\u9009\u62E9
-  - DOMAIN-KEYWORD,twitter,\u{1F680} \u8282\u70B9\u9009\u62E9
-  - DOMAIN-KEYWORD,google,\u{1F680} \u8282\u70B9\u9009\u62E9
-  - DOMAIN-KEYWORD,telegra,\u{1F680} \u8282\u70B9\u9009\u62E9
 
-  - GEOSITE,youtube,\u{1F680} \u8282\u70B9\u9009\u62E9             
-  - GEOSITE,bilibili,\u{1F30D} \u5168\u7403\u76F4\u8FDE
+  - DOMAIN-KEYWORD,twitter,\u8282\u70B9\u9009\u62E9
+  - DOMAIN-KEYWORD,telegra,\u8282\u70B9\u9009\u62E9
+  - DOMAIN-KEYWORD,google,\u8282\u70B9\u9009\u62E9
+  - DOMAIN-KEYWORD,github,\u8282\u70B9\u9009\u62E9
+
+
+  - GEOSITE,youtube,\u8282\u70B9\u9009\u62E9
+  - GEOIP,telegram,\u8282\u70B9\u9009\u62E9             
+  - GEOSITE,bilibili,\u5168\u7403\u76F4\u8FDE
+  - GEOSITE,cn,\u5168\u7403\u76F4\u8FDE
+  - GEOIP,cn,\u5168\u7403\u76F4\u8FDE
   - GEOSITE,private,DIRECT
-  - GEOSITE,cn,\u{1F30D} \u5168\u7403\u76F4\u8FDE
-
-  - GEOIP,telegram,\u{1F680} \u8282\u70B9\u9009\u62E9       
   - GEOIP,private,DIRECT,no-resolve
-  - GEOIP,cn,\u{1F30D} \u5168\u7403\u76F4\u8FDE
+
   
-  - MATCH,\u{1F680} \u8282\u70B9\u9009\u62E9
+  - MATCH,\u6F0F\u7F51\u4E4B\u9C7C
 
 `;
 
@@ -3071,33 +2920,52 @@ PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9InpoIj4KPGhlYWQ+CiAgICA8bGluayByZWw9ImFwcGxl
 `;
 
   // src/index.js
-  var warnings = "";
-  var readpre = "";
-  var readpost = "";
-  var readgroup = "";
-  var contentDisposition;
   addEventListener("fetch", (event) => {
     event.respondWith(handleRequest(event.request));
   });
   async function handleRequest(request) {
+    let warnings = "";
+    let readpre = "";
+    let readpost = "";
+    let readgroup = "";
+    let contentDisposition;
     if (new URL(request.url).searchParams.has("links")) {
       const links = new URL(request.url).searchParams.get("links");
       const linkArray = links.split(",");
       const resultString = linkArray.map((link) => `#${link}
 `).join("");
       warnings += resultString;
-      const headers = { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" };
+      const now = /* @__PURE__ */ new Date();
+      const str2 = `#${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}:${String(now.getSeconds()).padStart(2, "0")}
+`;
+      warnings += str2;
+      const headers = { "User-Agent": "clash-verge/v1.6.6" };
       const fetchPromises = linkArray.map((link) => fetch(link, { headers }).then((response) => response.text()));
       const results = await Promise.all(fetchPromises);
       let mergedProxies = { proxies: [] };
-      results.forEach((result) => {
+      for (let i = 0; i < results.length; i++) {
+        const result = results[i];
+        const link = linkArray[i];
+        let parsed;
         try {
-          let proxies = js_yaml_default.load(result).proxies;
-          mergedProxies.proxies = [...mergedProxies.proxies, ...proxies];
-        } catch (error) {
-          console.error("\u89E3\u6790 YAML \u65F6\u51FA\u9519:", error);
+          parsed = js_yaml_default.load(result);
+        } catch (e) {
+          parsed = null;
         }
-      });
+        if (!parsed?.proxies || !Array.isArray(parsed.proxies) || parsed.proxies.length === 0) {
+          const cached = await BACKUP.get(link);
+          if (!cached) {
+            return new Response(
+                JSON.stringify({ error: `\u94FE\u63A5\u65E0\u6548\u4E14\u672A\u627E\u5230\u7F13\u5B58: ${link}` }),
+                { status: 404, headers: { "Content-Type": "application/json" } }
+            );
+          }
+          parsed = js_yaml_default.load(cached);
+        } else {
+          await BACKUP.put(link, result, { expirationTTL: 15552e3 });
+        }
+        mergedProxies.proxies.push(...parsed.proxies);
+      }
       const proxyNames = mergedProxies.proxies.map((proxy) => proxy.name);
       mergedProxies["proxy-groups"] = [];
       try {
@@ -3123,15 +2991,20 @@ PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9InpoIj4KPGhlYWQ+CiAgICA8bGluayByZWw9ImFwcGxl
         group2.proxies.push(...proxyNames);
       });
       const content = js_yaml_default.dump(mergedProxies);
+      let finalContent = warnings + readpre + content + readpost;
       try {
-        await BACKUP.put(Date.now().toString(), warnings + content, { expirationTTL: 432e3 });
+        await BACKUP.put(Date.now().toString(), finalContent, { expirationTTL: 432e3 });
       } catch (error) {
-        warnings += "#\u4FDD\u5B58\u5907\u4EFD\u5931\u8D25\n";
+        finalContent = "#\u4FDD\u5B58\u5907\u4EFD\u5931\u8D25\n" + finalContent;
       }
-      const finalContent = warnings + readpre + content + readpost;
+      let extraHeaders = {};
       if (linkArray.length === 1) {
         const response = await fetch(linkArray[0], { headers });
         contentDisposition = response.headers.get("Content-Disposition") || `inline; filename="${new URL(linkArray[0]).hostname}"`;
+        const subInfo = response.headers.get("subscription-userinfo");
+        if (subInfo) {
+          extraHeaders["subscription-userinfo"] = subInfo;
+        }
       } else {
         contentDisposition = `inline; filename*=UTF-8''${encodeURIComponent("\u878D\u5408\u914D\u7F6E")}`;
       }
@@ -3139,7 +3012,8 @@ PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9InpoIj4KPGhlYWQ+CiAgICA8bGluayByZWw9ImFwcGxl
         status: 200,
         headers: {
           "Content-Type": "text/plain; charset=utf-8",
-          "Content-Disposition": contentDisposition
+          "Content-Disposition": contentDisposition,
+          ...extraHeaders
         }
       });
     } else if (new URL(request.url).searchParams.has("linkss")) {
