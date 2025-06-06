@@ -128,22 +128,32 @@ async function handleRequest(request) {
 
 
 
+        let extraHeaders = {};
 
         if (linkArray.length === 1) {
-            const response = await fetch(linkArray[0], {headers});
+            const response = await fetch(linkArray[0], { headers });
             contentDisposition = response.headers.get('Content-Disposition') || `inline; filename="${new URL(linkArray[0]).hostname}"`;
+
+            const subInfo = response.headers.get('subscription-userinfo');
+            if (subInfo) {
+                extraHeaders['subscription-userinfo'] = subInfo;
+            }
         } else {
-            contentDisposition = `inline; filename*=UTF-8''${encodeURIComponent('融合配置')}`;// 如果有多个链接，统一设置文件名为“融合配置”
+            contentDisposition = `inline; filename*=UTF-8''${encodeURIComponent('融合配置')}`;
         }
+
+
 
 
         return new Response(finalContent, {
             status: 200,
             headers: {
                 'Content-Type': 'text/plain; charset=utf-8',
-                'Content-Disposition': contentDisposition
+                'Content-Disposition': contentDisposition,
+                ...extraHeaders
             }
         });
+
 
 
     }
