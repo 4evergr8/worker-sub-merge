@@ -84,54 +84,54 @@ dns:
 ```
 键名：group，用于自定义代理组配置，示例如下：
 ```plaintext
-   [
+
+    [
     	{
-        "name": "节点选择",
+        "name": "📍节点选择",
         "type": "select",
         "proxies": [
-            "自动选择",
-            "轮询均衡",
-            "哈希均衡",
-            "粘性均衡"
+            "1🚀自动选择",
+            "2♻️轮询均衡",
+            "3📄哈希均衡",
+            "4🩹粘性均衡"
         	]
     	},
     	{
-        "name": "全球直连",
+        "name": "🔗全球直连",
         "type": "select",
         "proxies": [
             "DIRECT",
-            "节点选择"
+            "📍节点选择"
         	]
     	},
         {
-        "name": "漏网之鱼",
+        "name": "🐠漏网之鱼",
         "type": "select",
         "proxies": [
-            "节点选择",
+            "📍节点选择",
             "DIRECT",
             "REJECT"
         	]
     	},
     	{
-        "name": "全球拦截",
+        "name": "🚧全球拦截",
         "type": "select",
         "proxies": [
             "REJECT",
-            "节点选择"
+            "📍节点选择"
         	]
     	},
         {
-        "name": "自动选择",
+        "name": "1🚀自动选择",
         "type": "url-test",
         "url": "https://android.chat.openai.com",
         "interval": "300",
         "lazy": true,
-        "icon": "😁",
         "proxies": [
             ]
         },
         {
-        "name": "轮询均衡",
+        "name": "2♻️轮询均衡",
         "type": "load-balance",
         "strategy": "round-robin",
         "url": "https://android.chat.openai.com",
@@ -141,7 +141,7 @@ dns:
             ]
         },
         {
-        "name": "哈希均衡",
+        "name": "3📄哈希均衡",
         "type": "load-balance",
         "strategy": "consistent-hashing",
         "url": "https://android.chat.openai.com",
@@ -151,7 +151,7 @@ dns:
             ]
         },
         {
-        "name": "粘性均衡",
+        "name": "4🩹粘性均衡",
         "type": "load-balance",
         "strategy": "sticky-sessions",
         "url": "https://android.chat.openai.com",
@@ -161,7 +161,6 @@ dns:
             ]
         }
     ]
-
 
 
 ```
