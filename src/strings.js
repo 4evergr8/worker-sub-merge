@@ -66,10 +66,10 @@ export let group = `
         "name": "📍节点选择",
         "type": "select",
         "proxies": [
-            "1🚀自动选择",
-            "2♻️轮询均衡",
-            "3📄哈希均衡",
-            "4🩹粘性均衡"
+            "🚀自动选择",
+            "♻️轮询均衡",
+            "📄哈希均衡",
+            "🩹粘性均衡"
         	]
     	},
     	{
@@ -98,7 +98,7 @@ export let group = `
         	]
     	},
         {
-        "name": "1🚀自动选择",
+        "name": "🚀自动选择",
         "type": "url-test",
         "url": "https://android.chat.openai.com",
         "interval": "300",
@@ -107,7 +107,7 @@ export let group = `
             ]
         },
         {
-        "name": "2♻️轮询均衡",
+        "name": "♻️轮询均衡",
         "type": "load-balance",
         "strategy": "round-robin",
         "url": "https://android.chat.openai.com",
@@ -117,7 +117,7 @@ export let group = `
             ]
         },
         {
-        "name": "3📄哈希均衡",
+        "name": "📄哈希均衡",
         "type": "load-balance",
         "strategy": "consistent-hashing",
         "url": "https://android.chat.openai.com",
@@ -127,7 +127,7 @@ export let group = `
             ]
         },
         {
-        "name": "4🩹粘性均衡",
+        "name": "🩹粘性均衡",
         "type": "load-balance",
         "strategy": "sticky-sessions",
         "url": "https://android.chat.openai.com",
