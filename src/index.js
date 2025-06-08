@@ -106,9 +106,26 @@ async function handleRequest(request) {
 
 
         mergedProxies['proxy-groups'] = JSON.parse(group);
+        // 按拼音（中文）规则排序
+        function removeEmoji(str) {
+    return str.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '');
+}
+
+        const sortedProxyNames = proxyNames
+            .slice()
+            .sort((a, b) =>
+                removeEmoji(a).localeCompare(removeEmoji(b), 'zh')
+            );
+
+
+        // 填充每个代理组
         mergedProxies['proxy-groups'].forEach(group => {
-            group.proxies.push(...proxyNames);
+            group.proxies.push(...sortedProxyNames);
         });
+
+//        mergedProxies['proxy-groups'].forEach(group => {
+//            group.proxies.push(...proxyNames);
+//        });
 
         const content = yaml.dump(mergedProxies);
 
