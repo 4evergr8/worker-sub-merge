@@ -60,9 +60,16 @@ dns:
 `
 
 export let group = `
-
-    [
-    	{
+[
+     {
+        "name": "🚀自动选择",
+        "type": "url-test",
+        "url": "https://chatgpt.com/",
+        "interval": "300",
+        "lazy": true,
+        "proxies": []
+    },
+    {
         "name": "📍节点选择",
         "type": "select",
         "proxies": [
@@ -70,73 +77,62 @@ export let group = `
             "♻️轮询均衡",
             "📄哈希均衡",
             "🩹粘性均衡"
-        	]
-    	},
-    	{
+        ]
+    },
+    {
         "name": "🔗全球直连",
         "type": "select",
         "proxies": [
             "DIRECT",
             "📍节点选择"
-        	]
-    	},
-        {
+        ]
+    },
+    {
         "name": "🐠漏网之鱼",
         "type": "select",
         "proxies": [
             "📍节点选择",
             "DIRECT",
             "REJECT"
-        	]
-    	},
-    	{
+        ]
+    },
+    {
         "name": "🚧全球拦截",
         "type": "select",
         "proxies": [
             "REJECT",
             "📍节点选择"
-        	]
-    	},
-        {
-        "name": "🚀自动选择",
-        "type": "url-test",
-        "url": "https://android.chat.openai.com",
-        "interval": "300",
-        "lazy": true,
-        "proxies": [
-            ]
-        },
-        {
+        ]
+    },
+    {
         "name": "♻️轮询均衡",
         "type": "load-balance",
         "strategy": "round-robin",
-        "url": "https://android.chat.openai.com",
-        "interval": "300",
+        "url": "https://chatgpt.com/",
+        "interval": 300,
         "lazy": true,
-        "proxies": [    
-            ]
-        },
-        {
+        "proxies": []
+    },
+    {
         "name": "📄哈希均衡",
         "type": "load-balance",
         "strategy": "consistent-hashing",
-        "url": "https://android.chat.openai.com",
-        "interval": "300",
+        "url": "https://chatgpt.com/",
+        "interval": 300,
         "lazy": true,
-        "proxies": [    
-            ]
-        },
-        {
+        "proxies": []
+    },
+    {
         "name": "🩹粘性均衡",
         "type": "load-balance",
         "strategy": "sticky-sessions",
-        "url": "https://android.chat.openai.com",
-        "interval": "300",
+        "url": "https://chatgpt.com/",
+        "interval": 300,
         "lazy": true,
-        "proxies": [    
-            ]
-        }
-    ]
+        "proxies": []
+    }
+]
+
 
 `
 
