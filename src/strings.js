@@ -80,6 +80,13 @@ export let group = `
         ]
     },
     {
+        "name": "🔮人工智能",
+        "type": "select",
+        "exclude-filter": "HK|香港|🇭🇰|TW|台湾|🇹🇼|SG|新加坡|🇸🇬|KR|韩国|🇰🇷|AR|阿根廷|🇦🇷|PK|巴基斯坦|🇵🇰|IN|印度|🇮🇳|IR|伊朗|🇮🇷|RU|俄罗斯|🇷🇺",
+        "proxies": [
+        ]
+    },
+    {
         "name": "🔗全球直连",
         "type": "select",
         "proxies": [
@@ -144,6 +151,10 @@ rules:
   - DOMAIN-KEYWORD, .ad., 🚧全球拦截
   - DOMAIN-KEYWORD, .ads.,🚧全球拦截
 
+  - DOMAIN-KEYWORD,openai,🔮人工智能
+  - DOMAIN-KEYWORD,gemini,🔮人工智能
+  - DOMAIN-KEYWORD,claude,🔮人工智能
+  - DOMAIN-KEYWORD,chatgpt,🔮人工智能
 
   - DOMAIN-KEYWORD,twitter,📍节点选择
   - DOMAIN-KEYWORD,telegra,📍节点选择
