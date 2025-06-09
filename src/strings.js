@@ -64,7 +64,7 @@ export let group = `
      {
         "name": "🚀自动选择",
         "type": "url-test",
-        "url": "https://chatgpt.com/",
+        "url": "https://telegram.org",
         "interval": "300",
         "lazy": true,
         "proxies": []
@@ -81,10 +81,12 @@ export let group = `
     },
     {
         "name": "🔮人工智能",
-        "type": "select",
+        "type": "url-test",
         "exclude-filter": "HK|香港|🇭🇰|TW|台湾|🇹🇼|SG|新加坡|🇸🇬|KR|韩国|🇰🇷|AR|阿根廷|🇦🇷|PK|巴基斯坦|🇵🇰|IN|印度|🇮🇳|IR|伊朗|🇮🇷|RU|俄罗斯|🇷🇺",
-        "proxies": [
-        ]
+        "url": "https://telegram.org",
+        "interval": "300",
+        "lazy": true,
+        "proxies": []
     },
     {
         "name": "🔗全球直连",
@@ -115,7 +117,7 @@ export let group = `
         "name": "♻️轮询均衡",
         "type": "load-balance",
         "strategy": "round-robin",
-        "url": "https://chatgpt.com/",
+        "url": "https://telegram.org",
         "interval": 300,
         "lazy": true,
         "proxies": []
@@ -124,7 +126,7 @@ export let group = `
         "name": "📄哈希均衡",
         "type": "load-balance",
         "strategy": "consistent-hashing",
-        "url": "https://chatgpt.com/",
+        "url": "https://telegram.org",
         "interval": 300,
         "lazy": true,
         "proxies": []
@@ -133,7 +135,7 @@ export let group = `
         "name": "🩹粘性均衡",
         "type": "load-balance",
         "strategy": "sticky-sessions",
-        "url": "https://chatgpt.com/",
+        "url": "https://telegram.org",
         "interval": 300,
         "lazy": true,
         "proxies": []
