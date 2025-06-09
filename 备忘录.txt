@@ -1,0 +1,3 @@
+wrangler deploy --config sub.toml
+wrangler deploy --config merge.toml
+wrangler dev --config sub.toml
