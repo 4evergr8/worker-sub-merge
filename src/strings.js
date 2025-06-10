@@ -1,3 +1,4 @@
+const filter = "\"exclude-filter\": \"官网|剩余|套餐\",\n"
 export let pre = `
 
 port: 7890
@@ -67,7 +68,7 @@ export let group = `
         "url": "https://telegram.org",
         "interval": "300",
         "lazy": true,
-        "exclude-filter": "官网|剩余|套餐",
+        ${filter}
         "proxies": []
     },
     {
