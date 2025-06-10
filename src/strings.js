@@ -67,6 +67,7 @@ export let group = `
         "url": "https://telegram.org",
         "interval": "300",
         "lazy": true,
+        "exclude-filter": "官网|剩余|套餐",
         "proxies": []
     },
     {
@@ -82,7 +83,7 @@ export let group = `
     {
         "name": "🔮人工智能",
         "type": "url-test",
-        "exclude-filter": "HK|香港|🇭🇰|TW|台湾|🇹🇼|SG|新加坡|🇸🇬|KR|韩国|🇰🇷|AR|阿根廷|🇦🇷|PK|巴基斯坦|🇵🇰|IN|印度|🇮🇳|IR|伊朗|🇮🇷|RU|俄罗斯|🇷🇺",
+        "exclude-filter": "官网|剩余|套餐|HK|香港|🇭🇰|TW|台湾|🇹🇼|SG|新加坡|🇸🇬|KR|韩国|🇰🇷|AR|阿根廷|🇦🇷|PK|巴基斯坦|🇵🇰|IN|印度|🇮🇳|IR|伊朗|🇮🇷|RU|俄罗斯|🇷🇺",
         "url": "https://telegram.org",
         "interval": "300",
         "lazy": true,
@@ -91,6 +92,7 @@ export let group = `
     {
         "name": "🔗全球直连",
         "type": "select",
+        "exclude-filter": "官网|剩余|套餐",
         "proxies": [
             "DIRECT",
             "📍节点选择"
@@ -99,6 +101,7 @@ export let group = `
     {
         "name": "🐠漏网之鱼",
         "type": "select",
+        "exclude-filter": "官网|剩余|套餐",
         "proxies": [
             "📍节点选择",
             "DIRECT",
@@ -108,6 +111,7 @@ export let group = `
     {
         "name": "🚧全球拦截",
         "type": "select",
+        "exclude-filter": "官网|剩余|套餐",
         "proxies": [
             "REJECT",
             "📍节点选择"
@@ -120,6 +124,7 @@ export let group = `
         "url": "https://telegram.org",
         "interval": 300,
         "lazy": true,
+        "exclude-filter": "官网|剩余|套餐",
         "proxies": []
     },
     {
@@ -129,6 +134,7 @@ export let group = `
         "url": "https://telegram.org",
         "interval": 300,
         "lazy": true,
+        "exclude-filter": "官网|剩余|套餐",
         "proxies": []
     },
     {
@@ -138,6 +144,7 @@ export let group = `
         "url": "https://telegram.org",
         "interval": 300,
         "lazy": true,
+        "exclude-filter": "官网|剩余|套餐",
         "proxies": []
     }
 ]
