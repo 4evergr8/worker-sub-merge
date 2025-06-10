@@ -16,9 +16,6 @@ async function handleRequest(request) {
 
 
     let warnings = ''
-    let readpre = ''
-    let readpost = ''
-    let readgroup = ''
     let contentDisposition;
 
 
@@ -60,7 +57,7 @@ async function handleRequest(request) {
                 if (!cached) {
                     return new Response(
                         JSON.stringify({ error: `链接无效且未找到缓存: ${link}` }),
-                        { status: 404, headers: { 'Content-Type': 'application/json' } }
+                        { status: 666, headers: { 'Content-Type': 'application/json' } }
                     );
                 }
                 parsed = yaml.load(cached); // 这里不再 try-catch，假设缓存始终可解析
@@ -78,34 +75,18 @@ async function handleRequest(request) {
 
 
 
-        try {
-            readpre = await BACKUP.get('pre'); // 尝试从 KV 中获取 pre
-        } catch (error) {
-            warnings += '#KV配置失败，使用默认pre值\n';
-        }
-        readpre = readpre || pre
-
-        try {
-            readpost = await BACKUP.get('post'); // 尝试从 KV 中获取 pre
-        } catch (error) {
-            warnings += '#KV配置失败，使用默认post值\n';
-        }
-        readpost = readpost || post
 
 
-        try {
-            readgroup = await BACKUP.get('group'); // 尝试从 KV 中获取 pre
-        } catch (error) {
-            warnings += '#KV配置失败，使用默认group值\n';
-        }
-        readgroup = readgroup || group
+
+
+
 
 
 
         mergedProxies['proxy-groups'] = JSON.parse(group);
 
         mergedProxies['proxy-groups'].forEach((group, index) => {
-            if (index === 0 || index === 2) {
+            if (index !== 1 || index !== 2 || index !== 3 || index !== 4) {
                 group.proxies.push(...proxyNames);
             }
         });
@@ -115,7 +96,7 @@ async function handleRequest(request) {
 
 
 
-        let finalContent = warnings + readpre + content + readpost;
+        let finalContent = warnings + pre + content + post;
 
 
         try {
