@@ -105,7 +105,7 @@ async function handleRequest(request) {
         mergedProxies['proxy-groups'] = JSON.parse(group);
 
         mergedProxies['proxy-groups'].forEach((group, index) => {
-            if (index !== 1) {  // 排除第二个代理组（索引1）
+            if (index === 0 || index === 2) {
                 group.proxies.push(...proxyNames);
             }
         });
