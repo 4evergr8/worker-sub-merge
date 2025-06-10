@@ -86,9 +86,10 @@ async function handleRequest(request) {
         mergedProxies['proxy-groups'] = JSON.parse(group);
 
         mergedProxies['proxy-groups'].forEach((group, index) => {
-            if (index !== 1 || index !== 2 || index !== 3 || index !== 4) {
-                group.proxies.push(...proxyNames);
-            }
+            if (index !== 1 && index !== 3 && index !== 4 && index !== 5) {
+    group.proxies.push(...proxyNames);
+}
+
         });
 
         const content = yaml.dump(mergedProxies);
