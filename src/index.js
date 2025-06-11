@@ -108,24 +108,39 @@ async function handleRequest(request) {
 
 
 
+///////////////////////////////
 
-
+        function encodeRFC5987ValueChars(str) {
+            const encoder = new TextEncoder();
+            const bytes = encoder.encode(str);
+            return Array.from(bytes).map(b => '%' + b.toString(16).toUpperCase().padStart(2, '0')).join('');
+        }
 
         let extraHeaders = {};
 
         if (linkArray.length === 1) {
             const response = await fetch(linkArray[0], { headers });
-            contentDisposition = response.headers.get('Content-Disposition') || `inline; filename="${new URL(linkArray[0]).hostname}"`;
 
             const subInfo = response.headers.get('subscription-userinfo');
-            if (subInfo) {
-                extraHeaders['subscription-userinfo'] = subInfo;
+            if (subInfo) extraHeaders['subscription-userinfo'] = subInfo;
+
+            let name = response.headers.get('Content-Disposition')?.match(/filename\*?=([^;]+)/i)?.[1]?.trim();
+            if (!name) {
+                name = new URL(linkArray[0]).hostname;
+            } else if (name.toLowerCase().startsWith("utf-8''")) {
+                name = decodeURIComponent(name.slice(7));
+            } else {
+                name = name.replace(/^["']|["']$/g, '');
             }
+
+            name = `🌀${name}`;
+            contentDisposition = `attachment; filename*=UTF-8''${encodeRFC5987ValueChars(name)}`;
         } else {
-            contentDisposition = `inline; filename*=UTF-8''${encodeURIComponent('融合配置')}`;
+            const name = '🌀融合配置';
+            contentDisposition = `attachment; filename*=UTF-8''${encodeRFC5987ValueChars(name)}`;
         }
 
-
+/////////
 
 
         return new Response(finalContent, {
@@ -141,10 +156,6 @@ async function handleRequest(request) {
 
     }
 
-
-    else if (new URL(request.url).searchParams.has('linkss')) {
-
-    }
 
     else{
 
