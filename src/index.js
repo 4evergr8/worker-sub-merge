@@ -36,31 +36,8 @@ async function handleRequest(request) {
         const headers = {'User-Agent': 'clash-verge/v1.6.6'};
 
 
-
-
-
-        const fetchResults = await Promise.allSettled(
-            linkArray.map(link => fetch(link, { headers }).then(res => res.text()))
-        );
-
-// 检查是否有请求失败
-        for (let i = 0; i < fetchResults.length; i++) {
-            const result = fetchResults[i];
-            if (result.status !== 'fulfilled') {
-                return new Response(
-                    JSON.stringify({ error: `请求失败: ${linkArray[i]}` }),
-                    { status: 666, headers: { 'Content-Type': 'application/json' } }
-                );
-            }
-        }
-
-        const results = fetchResults.map(r => r.value);
-
-
-
-
-
-
+        const fetchPromises = linkArray.map(link => fetch(link, {headers}).then(response => response.text()));
+        const results = await Promise.all(fetchPromises);
 
         let mergedProxies = { proxies: [] };
 
