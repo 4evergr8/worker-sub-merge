@@ -57,12 +57,24 @@ async function handleRequest(request) {
                 if (!cached) {
                     return new Response(
                         JSON.stringify({ error: `链接无效且未找到缓存: ${link}` }),
-                        { status: 666, headers: { 'Content-Type': 'application/json' } }
+                        { status: 432, headers: { 'Content-Type': 'application/json' } }
                     );
                 }
                 parsed = yaml.load(cached); // 这里不再 try-catch，假设缓存始终可解析
             } else {
-                await BACKUP.put(link, result, { expirationTTL: 15552000 }); // 6个月
+
+
+                        try {
+            await BACKUP.put(link, result, { expirationTTL: 15552000 }); // 6个月
+        } catch (error) {
+            warnings = '#保存备份失败\n'+warnings
+        }
+
+
+
+
+
+
             }
 
             mergedProxies.proxies.push(...parsed.proxies);
@@ -100,11 +112,7 @@ async function handleRequest(request) {
         let finalContent = warnings + pre + content + post;
 
 
-        try {
-            await BACKUP.put(Date.now().toString(), finalContent, {expirationTTL: (432000)});
-        } catch (error) {
-            finalContent = '#保存备份失败\n'+finalContent
-        }
+
 
 
 
