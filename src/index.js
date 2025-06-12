@@ -1,20 +1,17 @@
 import yaml from 'js-yaml';
 
-
 import {pre, post, group} from "./strings.js";
 import {html} from "./html.js";
 
-
 addEventListener('fetch', event => {
-    event.respondWith(handleRequest(event.request));
+    event.respondWith(handleRequest(event));
 });
 
-async function handleRequest(request) {
-
+async function handleRequest(event) {
+    const request = event.request;
 
     let warnings = ''
     let contentDisposition;
-
 
     if (new URL(request.url).searchParams.has('links')) {
         const links = new URL(request.url).searchParams.get('links'); // 获取查询参数中的 links 值
@@ -25,10 +22,9 @@ async function handleRequest(request) {
         const str = `#${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}\n`;
         warnings += str;
 
-
         const headers = {'User-Agent': 'clash-verge/v1.6.6'};
 
-
+        // 先全部fetch文本
         const fetchPromises = linkArray.map(link => fetch(link, {headers}).then(response => response.text()));
         const results = await Promise.all(fetchPromises);
 
@@ -46,6 +42,7 @@ async function handleRequest(request) {
             }
 
             if (!parsed?.proxies || !Array.isArray(parsed.proxies) || parsed.proxies.length === 0) {
+                // 解析无效，从KV取备份
                 const cached = await BACKUP.get(link);
                 if (!cached) {
                     return new Response(
@@ -53,26 +50,21 @@ async function handleRequest(request) {
                         {status: 432, headers: {'Content-Type': 'application/json'}}
                     );
                 }
-                parsed = yaml.load(cached); // 这里不再 try-catch，假设缓存始终可解析
+                parsed = yaml.load(cached); // 假设缓存总能解析，无需try-catch
             } else {
-
-
-                try {
-                    await BACKUP.put(link, result, {expirationTTL: 15552000}); // 6个月
-                } catch (error) {
-                    warnings = '#保存备份失败\n' + warnings
-                }
-
-
+                // 解析有效，异步写入KV，不阻塞响应
+                event.waitUntil(
+                    BACKUP.put(link, result, {expirationTTL: 15552000}).catch(() => {
+                        warnings = '#保存备份失败\n' + warnings;
+                    })
+                );
             }
 
             mergedProxies.proxies.push(...parsed.proxies);
         }
 
-
         const proxyNames = mergedProxies.proxies.map(proxy => proxy.name);
         mergedProxies['proxy-groups'] = [];
-
 
         mergedProxies['proxy-groups'] = JSON.parse(group);
 
@@ -80,16 +72,13 @@ async function handleRequest(request) {
             if (index !== 1 && index !== 5 && index !== 6 && index !== 7) {
                 group.proxies.push(...proxyNames);
             }
-
         });
 
         const content = yaml.dump(mergedProxies);
 
-
         let finalContent = warnings + pre + content + post;
 
-
-///////////////////////////////
+        ///////////////////////////////
 
         function encodeRFC5987ValueChars(str) {
             const encoder = new TextEncoder();
@@ -121,8 +110,7 @@ async function handleRequest(request) {
             contentDisposition = `attachment; filename*=UTF-8''${encodeRFC5987ValueChars(name)}`;
         }
 
-/////////
-
+        /////////
 
         return new Response(finalContent, {
             status: 200,
@@ -133,13 +121,9 @@ async function handleRequest(request) {
             }
         });
 
-
     } else {
-
         return new Response(decodeURIComponent(escape(atob(html))), {
             headers: {"Content-Type": "text/html"}
         });
     }
-
-
 }
