@@ -1,5 +1,5 @@
-const filter = "\"exclude-filter\": \"官网|剩余|套餐\",\n"
-const ai_filter = "\"exclude-filter\": \"🇨🇳|官网|剩余|套餐|HK|香港|🇭🇰|MO|澳门|🇲🇴|AR|阿根廷|🇦🇷|PK|巴基斯坦|🇵🇰IR|伊朗|🇮🇷|RU|俄罗斯|🇷🇺\",\n"
+const filter = "\"exclude-filter\": \"官网|剩余|套餐|超时|群组\",\n"
+const ai_filter = "\"exclude-filter\": \"🇨🇳|官网|剩余|套餐|超时|群组|HK|香港|🇭🇰|MO|澳门|🇲🇴|AR|阿根廷|🇦🇷|PK|巴基斯坦|🇵🇰IR|伊朗|🇮🇷|RU|俄罗斯|🇷🇺\",\n"
 export let pre = `
 
 port: 7890
@@ -45,7 +45,10 @@ dns:
   use-system-hosts: true  #是否查询系统 hosts，默认 true
   respect-rules: false  #dns 连接遵守路由规则，需配置 proxy-server-nameserver
   default-nameserver:  #默认 DNS, 用于解析 DNS 服务器 的域名，必须为 IP, 可为加密 DNS
-    - system
+    - 119.29.29.29
+    - 182.254.116.116
+    - 223.5.5.5
+    - 223.5.5.6
   nameserver-policy:
     "geosite:private,cn,geolocation-cn": system
     "geoip:cn": system
@@ -59,21 +62,23 @@ dns:
     - https://dns.alidns.com/dns-query
     - https://doh.pub/dns-query
   fallback:
-    - https://101.102.103.104/dns-query#skip-cert-verify=true
-    - tls://8.8.4.4#RULES
-    - tls://1.0.0.1#RULES
+    - https://dns.tipsy.coffee/dns-query
+    - https://8.8.4.4/dns-query#RULES
+    - https://1.0.0.1/dns-query#RULES
   fallback-filter:
     geoip: true
     geoip-code: cn
     geosite:
-      - gfw
-      - google
-      - telegram
-      - youtube
-      - twitter
-      - github
-      - spotify
       - geolocation-!cn
+      - gfw
+      - github
+      - google
+      - openai
+      - spotify
+      - telegram
+      - tiktok
+      - twitter
+      - youtube
     ipcidr:
       - 240.0.0.0/4
     domain:
@@ -123,6 +128,16 @@ export let group = `
         "lazy": true,
         "icon": "https://www.clashverge.dev/assets/icons/youtube.svg",
         ${ai_filter}
+        "proxies": []
+    },
+    {
+        "name": "🇯🇵日本网站",
+        "type": "url-test",
+        "url": "https://dlsite.com",
+        "interval": "120",
+        "lazy": true,
+        "icon": "https://www.clashverge.dev/assets/icons/guard.svg",
+        "exclude-filter": "^(?!.*日)(?!.*🇯🇵)(?!.*JP).*$",
         "proxies": []
     },
     {
@@ -190,28 +205,42 @@ rules:
   - DOMAIN-REGEX,\\b(ads\\.|ad\\.)\\S+,🚧全局拦截
   - DOMAIN-KEYWORD, .ad., 🚧全局拦截
   - DOMAIN-KEYWORD, .ads.,🚧全局拦截
+  - GEOSITE,category-ads-all,🚧全局拦截
 
 
   - DOMAIN-KEYWORD,openai,🔮人工智能
   - DOMAIN-KEYWORD,gemini,🔮人工智能
   - DOMAIN-KEYWORD,claude,🔮人工智能
   - DOMAIN-KEYWORD,chatgpt,🔮人工智能
+  - GEOSITE,openai,🔮人工智能
   
   
   - GEOSITE,spotify,📺国外媒体
   - GEOSITE,tiktok,📺国外媒体
-  - DOMAIN-KEYWORD,spotify,📺国外媒体
-  - DOMAIN-KEYWORD,tiktok,📺国外媒体
+  - GEOSITE,youtube,📺国外媒体 
+  
+
+  - DOMAIN-KEYWORD,dlsite,🇯🇵日本网站
+  - DOMAIN-KEYWORD,dmm,🇯🇵日本网站
+  - DOMAIN-KEYWORD,fantia,🇯🇵日本网站
+  - GEOIP,jp,🇯🇵日本网站
+  
+  
+  - GEOSITE,geolocation-!cn,📍节点选择
+  - GEOSITE,gfw,📍节点选择
+  - GEOSITE,github,📍节点选择
+  - GEOSITE,google,📍节点选择
+  - GEOSITE,telegram,📍节点选择
+  - GEOSITE,twitter,📍节点选择
 
 
-  - DOMAIN-KEYWORD,twitter,📍节点选择
-  - DOMAIN-KEYWORD,telegra,📍节点选择
-  - DOMAIN-KEYWORD,google,📍节点选择
-  - DOMAIN-KEYWORD,github,📍节点选择
-
-
-  - GEOSITE,youtube,📍节点选择
+  - GEOIP,cloudflare,📍节点选择
+  - GEOIP,google,📍节点选择
   - GEOIP,telegram,📍节点选择
+  - GEOIP,twitter,📍节点选择
+
+
+
   - GEOSITE,bilibili,🔗全局直连
   - GEOSITE,cn,🔗全局直连
   - GEOIP,cn,🔗全局直连
