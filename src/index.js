@@ -1,11 +1,8 @@
 import yaml from 'js-yaml';
 
 
-import {pre,post,group} from "./strings.js";
+import {pre, post, group} from "./strings.js";
 import {html} from "./html.js";
-
-
-
 
 
 addEventListener('fetch', event => {
@@ -19,18 +16,14 @@ async function handleRequest(request) {
     let contentDisposition;
 
 
-
-    if (new URL(request.url).searchParams.has('links'))
-    {
+    if (new URL(request.url).searchParams.has('links')) {
         const links = new URL(request.url).searchParams.get('links'); // 获取查询参数中的 links 值
         const linkArray = links.split(','); // 假设链接之间用逗号分隔
         const resultString = linkArray.map(link => `#${link}\n`).join('');
         warnings += resultString;
         const now = new Date();
-        const str = `#${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}\n`;
+        const str = `#${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}\n`;
         warnings += str;
-
-
 
 
         const headers = {'User-Agent': 'clash-verge/v1.6.6'};
@@ -39,7 +32,7 @@ async function handleRequest(request) {
         const fetchPromises = linkArray.map(link => fetch(link, {headers}).then(response => response.text()));
         const results = await Promise.all(fetchPromises);
 
-        let mergedProxies = { proxies: [] };
+        let mergedProxies = {proxies: []};
 
         for (let i = 0; i < results.length; i++) {
             const result = results[i];
@@ -56,23 +49,19 @@ async function handleRequest(request) {
                 const cached = await BACKUP.get(link);
                 if (!cached) {
                     return new Response(
-                        JSON.stringify({ error: `链接无效且未找到缓存: ${link}` }),
-                        { status: 432, headers: { 'Content-Type': 'application/json' } }
+                        JSON.stringify({error: `链接无效且未找到缓存: ${link}`}),
+                        {status: 432, headers: {'Content-Type': 'application/json'}}
                     );
                 }
                 parsed = yaml.load(cached); // 这里不再 try-catch，假设缓存始终可解析
             } else {
 
 
-                        try {
-            await BACKUP.put(link, result, { expirationTTL: 15552000 }); // 6个月
-        } catch (error) {
-            warnings = '#保存备份失败\n'+warnings
-        }
-
-
-
-
+                try {
+                    await BACKUP.put(link, result, {expirationTTL: 15552000}); // 6个月
+                } catch (error) {
+                    warnings = '#保存备份失败\n' + warnings
+                }
 
 
             }
@@ -85,35 +74,19 @@ async function handleRequest(request) {
         mergedProxies['proxy-groups'] = [];
 
 
-
-
-
-
-
-
-
-
-
-
         mergedProxies['proxy-groups'] = JSON.parse(group);
 
         mergedProxies['proxy-groups'].forEach((group, index) => {
             if (index !== 1 && index !== 3 && index !== 4 && index !== 5) {
-    group.proxies.push(...proxyNames);
-}
+                group.proxies.push(...proxyNames);
+            }
 
         });
 
         const content = yaml.dump(mergedProxies);
 
 
-
-
         let finalContent = warnings + pre + content + post;
-
-
-
-
 
 
 ///////////////////////////////
@@ -127,7 +100,7 @@ async function handleRequest(request) {
         let extraHeaders = {};
 
         if (linkArray.length === 1) {
-            const response = await fetch(linkArray[0], { headers });
+            const response = await fetch(linkArray[0], {headers});
 
             const subInfo = response.headers.get('subscription-userinfo');
             if (subInfo) extraHeaders['subscription-userinfo'] = subInfo;
@@ -161,19 +134,12 @@ async function handleRequest(request) {
         });
 
 
-
-    }
-
-
-    else{
+    } else {
 
         return new Response(decodeURIComponent(escape(atob(html))), {
-            headers: { "Content-Type": "text/html" }
+            headers: {"Content-Type": "text/html"}
         });
     }
-
-
-
 
 
 }
