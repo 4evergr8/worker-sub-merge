@@ -81,7 +81,7 @@ async function handleRequest(event) {
                 // 解析有效，异步写入KV，不阻塞响应
                 event.waitUntil(
                     BACKUP.put(link, result, {expirationTTL: 15552000}).catch(() => {
-                        warnings = '#保存备份失败\n' + warnings;
+                        //warnings = '#保存备份失败\n' + warnings;
                     })
                 );
             }
