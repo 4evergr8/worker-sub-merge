@@ -137,7 +137,6 @@ export let group = `
         "interval": "120",
         "lazy": true,
         "icon": "https://www.clashverge.dev/assets/icons/guard.svg",
-        "exclude-filter": "^(?!.*日)(?!.*🇯🇵)(?!.*JP).*$",
         "proxies": []
     },
     {
