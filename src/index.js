@@ -10,7 +10,7 @@ addEventListener('fetch', event => {
 async function handleRequest(event) {
     const request = event.request;
 
-    let warnings = ''
+    let warnings = '';
     let contentDisposition;
 
     if (new URL(request.url).searchParams.has('links')) {
@@ -24,9 +24,35 @@ async function handleRequest(event) {
 
         const headers = {'User-Agent': 'clash-verge/v1.6.6'};
 
-        // 先全部fetch文本
-        const fetchPromises = linkArray.map(link => fetch(link, {headers}).then(response => response.text()));
-        const results = await Promise.all(fetchPromises);
+        // 先fetch所有链接，拿到响应对象（包含headers和body）
+        const fetchPromises = linkArray.map(link => fetch(link, {headers}));
+        const responses = await Promise.all(fetchPromises);
+
+        // 解析文件名（仅单链接时）
+        let fileName = null;
+        let extraHeaders = {};
+
+        if (linkArray.length === 1) {
+            const cd = responses[0].headers.get('Content-Disposition');
+            if (cd) {
+                const match = cd.match(/filename\*?=([^;]+)/i);
+                if (match) {
+                    let name = match[1].trim();
+                    if (name.toLowerCase().startsWith("utf-8''")) {
+                        name = decodeURIComponent(name.slice(7));
+                    } else {
+                        name = name.replace(/^["']|["']$/g, '');
+                    }
+                    fileName = `🌀${name}`;
+                }
+            }
+            // 尝试获取 subscription-userinfo
+            const subInfo = responses[0].headers.get('subscription-userinfo');
+            if (subInfo) extraHeaders['subscription-userinfo'] = subInfo;
+        }
+
+        // 拿响应文本内容
+        const results = await Promise.all(responses.map(r => r.text()));
 
         let mergedProxies = {proxies: []};
 
@@ -64,8 +90,6 @@ async function handleRequest(event) {
         }
 
         const proxyNames = mergedProxies.proxies.map(proxy => proxy.name);
-        mergedProxies['proxy-groups'] = [];
-
         mergedProxies['proxy-groups'] = JSON.parse(group);
 
         mergedProxies['proxy-groups'].forEach((group, index) => {
@@ -78,39 +102,21 @@ async function handleRequest(event) {
 
         let finalContent = warnings + pre + content + post;
 
-        ///////////////////////////////
-
         function encodeRFC5987ValueChars(str) {
             const encoder = new TextEncoder();
             const bytes = encoder.encode(str);
             return Array.from(bytes).map(b => '%' + b.toString(16).toUpperCase().padStart(2, '0')).join('');
         }
 
-        let extraHeaders = {};
-
-        if (linkArray.length === 1) {
-            const response = await fetch(linkArray[0], {headers});
-
-            const subInfo = response.headers.get('subscription-userinfo');
-            if (subInfo) extraHeaders['subscription-userinfo'] = subInfo;
-
-            let name = response.headers.get('Content-Disposition')?.match(/filename\*?=([^;]+)/i)?.[1]?.trim();
-            if (!name) {
-                name = new URL(linkArray[0]).hostname;
-            } else if (name.toLowerCase().startsWith("utf-8''")) {
-                name = decodeURIComponent(name.slice(7));
-            } else {
-                name = name.replace(/^["']|["']$/g, '');
-            }
-
-            name = `🌀${name}`;
-            contentDisposition = `attachment; filename*=UTF-8''${encodeRFC5987ValueChars(name)}`;
-        } else {
-            const name = '🌀融合配置';
-            contentDisposition = `attachment; filename*=UTF-8''${encodeRFC5987ValueChars(name)}`;
+        if (!fileName) {
+            // 没拿到文件名，使用 hostname 做文件名
+            fileName = `🌀${new URL(linkArray[0]).hostname}`;
+        }
+        if (linkArray.length > 1) {
+            fileName = '🌀融合配置';
         }
 
-        /////////
+        contentDisposition = `attachment; filename*=UTF-8''${encodeRFC5987ValueChars(fileName)}`;
 
         return new Response(finalContent, {
             status: 200,
