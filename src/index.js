@@ -14,14 +14,13 @@ async function handleRequest(event) {
     let contentDisposition;
 
     if (new URL(request.url).searchParams.has('links')) {
-        const link = new URL(request.url).searchParams.get('links'); // 获取查询参数中的单个 link
+        const link = new URL(request.url).searchParams.get('links');
         warnings += `#${link}\n`;
         const now = new Date();
         const str = `#${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}\n`;
         warnings += str;
 
         const headers = {'User-Agent': 'clash-verge/v1.6.6'};
-
         const response = await fetch(link, {headers});
         const cd = response.headers.get('Content-Disposition');
         const subInfo = response.headers.get('subscription-userinfo');
@@ -90,8 +89,18 @@ async function handleRequest(event) {
             return Array.from(bytes).map(b => '%' + b.toString(16).toUpperCase().padStart(2, '0')).join('');
         }
 
+        function getRootDomain(hostname) {
+            const parts = hostname.split('.');
+            if (parts.length >= 2) {
+                return parts.slice(-2).join('.');
+            }
+            return hostname;
+        }
+
         if (!fileName) {
-            fileName = `🌀${new URL(link).hostname}`;
+            const hostname = new URL(link).hostname;
+            const rootDomain = getRootDomain(hostname);
+            fileName = `🌀${rootDomain}`;
         }
 
         contentDisposition = `attachment; filename*=UTF-8''${encodeRFC5987ValueChars(fileName)}`;
