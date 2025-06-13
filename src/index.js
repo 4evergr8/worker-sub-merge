@@ -16,8 +16,7 @@ async function handleRequest(event) {
         const link = new URL(request.url).searchParams.get('links');
         warnings += `#${link}\n`;
         const now = new Date();
-        const str = `#${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}\n`;
-        warnings += str;
+        warnings += `#${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}\n`;
 
         const headers = {'User-Agent': 'clash-verge/v1.6.6'};
         const response = await fetch(link, {headers});
@@ -47,23 +46,18 @@ async function handleRequest(event) {
         let parsed;
         try {
             parsed = yaml.load(result);
-        } catch (e) {
+        } catch {
             parsed = null;
         }
 
-        const hasProxies = parsed?.proxies && Array.isArray(parsed.proxies) && parsed.proxies.length > 0;
-        const hasProxyProviders = parsed?.['proxy-providers'] && Object.keys(parsed['proxy-providers']).length > 0;
+        let proxiesYaml;
+        let proxyList = [];
 
-        let content = null;
-
-        if (hasProxies || hasProxyProviders) {
-            const filtered = {};
-            if (hasProxies) filtered.proxies = parsed.proxies;
-            if (hasProxyProviders) filtered['proxy-providers'] = parsed['proxy-providers'];
-
-            content = yaml.dump(filtered);  // 只输出这两个字段
+        if (parsed?.proxies && Array.isArray(parsed.proxies) && parsed.proxies.length > 0) {
+            proxyList = parsed.proxies;
+            proxiesYaml = yaml.dump({proxies: proxyList});
             event.waitUntil(
-                BACKUP.put(link, content, {expirationTTL: 15552000}).catch(() => {})
+                BACKUP.put(link, proxiesYaml, {expirationTTL: 15552000}).catch(() => {})
             );
         } else {
             const cached = await BACKUP.get(link);
@@ -73,11 +67,23 @@ async function handleRequest(event) {
                     {status: 432, headers: {'Content-Type': 'application/json'}}
                 );
             }
-            content = cached;
+            proxiesYaml = cached;
+            const recovered = yaml.load(cached);
+            proxyList = recovered.proxies || [];
         }
 
+        const proxyNames = proxyList.map(p => p.name);
+        const excludeGroups = ['🚧全局拦截', '🔗全局直连',  '📍节点选择'];
 
-        let finalContent = warnings + pre + content + group + rule;
+        const groupObj = yaml.load(group);
+        for (let pg of groupObj['proxy-groups']) {
+            if (!excludeGroups.includes(pg.name)) {
+                pg.proxies = proxyNames;
+            }
+        }
+
+        const finalGroup = yaml.dump(groupObj);
+        const finalContent = warnings + pre + proxiesYaml + finalGroup + rule;
 
         function encodeRFC5987ValueChars(str) {
             const encoder = new TextEncoder();
@@ -87,10 +93,7 @@ async function handleRequest(event) {
 
         function getRootDomain(hostname) {
             const parts = hostname.split('.');
-            if (parts.length >= 2) {
-                return parts.slice(-2).join('.');
-            }
-            return hostname;
+            return parts.length >= 2 ? parts.slice(-2).join('.') : hostname;
         }
 
         if (!fileName) {
@@ -116,3 +119,5 @@ async function handleRequest(event) {
         });
     }
 }
+
+
