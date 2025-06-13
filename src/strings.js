@@ -45,6 +45,10 @@ dns:
   use-system-hosts: true  #是否查询系统 hosts，默认 true
   respect-rules: true  #dns 连接遵守路由规则，需配置 proxy-server-nameserver
   default-nameserver:  #默认 DNS, 用于解析 DNS 服务器 的域名，必须为 IP, 可为加密 DNS
+    - tls://119.28.28.28:853
+    - tls://119.29.29.29:853
+    - tls://223.5.5.5:853
+    - tls://223.5.5.6:853
   nameserver-policy:
     "geosite:private,cn,geolocation-cn": system
     "geoip:cn": system
@@ -58,8 +62,9 @@ dns:
   direct-nameserver-follow-policy: false  #是否遵循 nameserver-policy，默认为不遵守，仅当 direct-nameserver 不为空时生效
   nameserver:  #默认的域名解析服务器
     - https://8.8.4.4/dns-query
+    - https://8.8.8.8/dns-query
+    - https://1.1.1.1/dns-query
     - https://1.0.0.1/dns-query
-
 `
 
 export let group = `
