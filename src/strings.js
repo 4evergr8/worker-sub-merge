@@ -78,6 +78,7 @@ proxy-groups:
     lazy: true
     timeout: '2000'
     max-failed-times: '2'
+    include-all: true
     tolerance: 100
     icon: https://www.clashverge.dev/assets/icons/speed.svg
     exclude-filter: 官网|剩余|套餐|超时|群组
@@ -86,6 +87,7 @@ proxy-groups:
     type: select
     timeout: '2000'
     max-failed-times: '2'
+    include-all: false
     icon: https://www.clashverge.dev/assets/icons/adjust.svg
     proxies:
       - 🚀自动选择
@@ -98,6 +100,7 @@ proxy-groups:
     lazy: true
     timeout: '2000'
     max-failed-times: '2'
+    include-all: true
     tolerance: 100
     icon: https://www.clashverge.dev/assets/icons/chatgpt.svg
     exclude-filter: 🇨🇳|官网|剩余|套餐|超时|群组|HK|香港|🇭🇰|MO|澳门|🇲🇴|AR|阿根廷|🇦🇷|PK|巴基斯坦|🇵🇰IR|伊朗|🇮🇷|RU|俄罗斯|🇷🇺
@@ -109,6 +112,7 @@ proxy-groups:
     lazy: true
     timeout: '2000'
     max-failed-times: '2'
+    include-all: true
     tolerance: 100
     icon: https://www.clashverge.dev/assets/icons/youtube.svg
     proxies: []
@@ -119,12 +123,14 @@ proxy-groups:
     lazy: true
     timeout: '2000'
     max-failed-times: '2'
+    include-all: true
     icon: https://www.clashverge.dev/assets/icons/guard.svg
     proxies: []
   - name: 🔗全局直连
     type: select
     timeout: '2000'
     max-failed-times: '2'
+    include-all: false
     icon: https://www.clashverge.dev/assets/icons/link.svg
     exclude-filter: 官网|剩余|套餐|超时|群组
     proxies:
@@ -134,6 +140,7 @@ proxy-groups:
     type: select
     timeout: '2000'
     max-failed-times: '2'
+    include-all: false
     icon: https://www.clashverge.dev/assets/icons/block.svg
     exclude-filter: 官网|剩余|套餐|超时|群组
     proxies:
@@ -147,6 +154,7 @@ proxy-groups:
     lazy: true
     timeout: '2000'
     max-failed-times: '2'
+    include-all: true
     hidden: true
     icon: https://www.clashverge.dev/assets/icons/balance.svg
     exclude-filter: 官网|剩余|套餐|超时|群组
@@ -159,6 +167,7 @@ proxy-groups:
     lazy: true
     timeout: '2000'
     max-failed-times: '2'
+    include-all: true
     hidden: true
     icon: https://www.clashverge.dev/assets/icons/merry_go.svg
     exclude-filter: 官网|剩余|套餐|超时|群组
