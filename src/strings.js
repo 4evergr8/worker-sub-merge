@@ -16,10 +16,10 @@ geodata-loader: standard  #GEO 文件加载模式
 geo-auto-update: true  #自动更新 GEO
 geo-update-interval: 24  #更新间隔，单位为小时
 geox-url:
-  geoip: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat"
-  geosite: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat"
-  mmdb: "https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/country.mmdb"
-  asn: "https://github.com/xishang0128/geoip/releases/download/latest/GeoLite2-ASN.mmdb"
+  geoip: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
+  geosite: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+  mmdb: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.metadb"
+  asn: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
 global-ua: clash.meta  #自定义外部资源下载时使用的的 UA，默认为 clash.meta
 etag-support: true  #外部资源下载的 ETag 支持，默认为 true
 
@@ -45,17 +45,14 @@ dns:
   use-system-hosts: true  #是否查询系统 hosts，默认 true
   respect-rules: true  #dns 连接遵守路由规则，需配置 proxy-server-nameserver
   default-nameserver:  #默认 DNS, 用于解析 DNS 服务器 的域名，必须为 IP, 可为加密 DNS
-    - tls://119.29.29.29:853
-    - tls://182.254.116.116:853
-    - tls://223.5.5.5:853
-    - tls://223.5.5.6:853
   nameserver-policy:
     "geosite:private,cn,geolocation-cn": system
     "geoip:cn": system
   proxy-server-nameserver:  #代理节点域名解析服务器，仅用于解析代理节点的域名，如果不填则遵循 nameserver-policy、nameserver 和 fallback 的配置
-    - https://dns.flyme.cc/dns-query
-    - quic://dns.alidns.com:853
-    - https://doh.pub/dns-query
+    - tls://119.28.28.28:853
+    - tls://119.29.29.29:853
+    - tls://223.5.5.5:853
+    - tls://223.5.5.6:853
   direct-nameserver:  #用于 direct 出口域名解析的 DNS 服务器，如果不填则遵循 nameserver-policy、nameserver 和 fallback 的配置
     - system
   direct-nameserver-follow-policy: false  #是否遵循 nameserver-policy，默认为不遵守，仅当 direct-nameserver 不为空时生效
@@ -165,14 +162,6 @@ proxy-groups:
     icon: https://www.clashverge.dev/assets/icons/merry_go.svg
     exclude-filter: 官网|剩余|套餐|超时|群组
     proxies: []
-
-
-
-
-
-
-
-
 
 `
 
