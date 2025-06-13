@@ -6,3 +6,10 @@ compatibility_date = "2025-03-12"
 [[kv_namespaces]]
 binding = "BACKUP"
 id = "be22d7b5b00e48699f9b8c594a779947"
+
+[observability.logs]
+enabled = true
+
+
+
+
