@@ -1,6 +1,5 @@
 import yaml from 'js-yaml';
 import {pre, rule, group} from "./strings.js";
-import {html} from "./html.js";
 
 addEventListener('fetch', event => {
     event.respondWith(handleRequest(event));
@@ -20,7 +19,14 @@ async function handleRequest(event) {
         warnings += str;
 
         const headers = {'User-Agent': 'clash-verge/v1.6.6'};
-        const response = await fetch(link, {headers});
+
+        let response;
+        try {
+            response = await fetch(link, {headers});
+        } catch (e) {
+            return Response.redirect(link, 302);
+        }
+
         const cd = response.headers.get('Content-Disposition');
         const subInfo = response.headers.get('subscription-userinfo');
 
@@ -48,34 +54,23 @@ async function handleRequest(event) {
         try {
             parsed = yaml.load(result);
         } catch (e) {
-            parsed = null;
+            return Response.redirect(link, 302);
         }
 
         const hasProxies = parsed?.proxies && Array.isArray(parsed.proxies) && parsed.proxies.length > 0;
         const hasProxyProviders = parsed?.['proxy-providers'] && Object.keys(parsed['proxy-providers']).length > 0;
 
-        let content = null;
-
-        if (hasProxies || hasProxyProviders) {
-            const filtered = {};
-            if (hasProxies) filtered.proxies = parsed.proxies;
-            if (hasProxyProviders) filtered['proxy-providers'] = parsed['proxy-providers'];
-
-            content = yaml.dump(filtered);  // 只输出这两个字段
-            event.waitUntil(
-                BACKUP.put(link, content, {expirationTTL: 15552000}).catch(() => {})
+        if (!hasProxies && !hasProxyProviders) {
+            return new Response(
+                JSON.stringify({error: `订阅无效：未包含 proxies 或 proxy-providers: ${link}`}),
+                {status: 432, headers: {'Content-Type': 'application/json'}}
             );
-        } else {
-            const cached = await BACKUP.get(link);
-            if (!cached) {
-                return new Response(
-                    JSON.stringify({error: `链接无效且未找到缓存: ${link}`}),
-                    {status: 432, headers: {'Content-Type': 'application/json'}}
-                );
-            }
-            content = cached;
         }
 
+        const filtered = {};
+        if (hasProxies) filtered.proxies = parsed.proxies;
+        if (hasProxyProviders) filtered['proxy-providers'] = parsed['proxy-providers'];
+        const content = yaml.dump(filtered);
 
         let finalContent = warnings + pre + content + group + rule;
 
@@ -109,10 +104,7 @@ async function handleRequest(event) {
                 ...extraHeaders
             }
         });
-
     } else {
-        return new Response(decodeURIComponent(escape(atob(html))), {
-            headers: {"Content-Type": "text/html"}
-        });
+        return new Response('缺少 links 参数', {status: 400});
     }
 }
