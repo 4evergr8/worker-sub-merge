@@ -74,10 +74,10 @@ proxy-groups:
   - name: 🚀自动选择
     type: url-test
     url: https://telegram.org
-    interval: '120'
+    interval: 120
     lazy: true
-    timeout: '2000'
-    max-failed-times: '2'
+    timeout: 2000
+    max-failed-times: 2
     include-all: true
     tolerance: 100
     icon: https://www.clashverge.dev/assets/icons/speed.svg
@@ -85,21 +85,20 @@ proxy-groups:
     proxies: []
   - name: 📍节点选择
     type: select
-    timeout: '2000'
-    max-failed-times: '2'
+    timeout: 2000
+    max-failed-times: 2
     include-all: false
     icon: https://www.clashverge.dev/assets/icons/adjust.svg
     proxies:
       - 🚀自动选择
       - ♻️轮询均衡
-      - 📄散列均衡
   - name: 🔮人工智能
     type: url-test
     url: https://chatgpt.com
-    interval: '120'
+    interval: 120
     lazy: true
-    timeout: '2000'
-    max-failed-times: '2'
+    timeout: 2000
+    max-failed-times: 2
     include-all: true
     tolerance: 100
     icon: https://www.clashverge.dev/assets/icons/chatgpt.svg
@@ -108,10 +107,10 @@ proxy-groups:
   - name: 📺国外媒体
     type: url-test
     url: https://open.spotify.com
-    interval: '120'
+    interval: 120
     lazy: true
-    timeout: '2000'
-    max-failed-times: '2'
+    timeout: 2000
+    max-failed-times: 2
     include-all: true
     tolerance: 100
     icon: https://www.clashverge.dev/assets/icons/youtube.svg
@@ -119,17 +118,17 @@ proxy-groups:
   - name: 🇯🇵日本网站
     type: url-test
     url: https://dlsite.com
-    interval: '120'
+    interval: 120
     lazy: true
-    timeout: '2000'
-    max-failed-times: '2'
+    timeout: 2000
+    max-failed-times: 2
     include-all: true
     icon: https://www.clashverge.dev/assets/icons/guard.svg
     proxies: []
   - name: 🔗全局直连
     type: select
-    timeout: '2000'
-    max-failed-times: '2'
+    timeout: 2000
+    max-failed-times: 2
     include-all: false
     icon: https://www.clashverge.dev/assets/icons/link.svg
     exclude-filter: 官网|剩余|套餐|超时|群组
@@ -138,8 +137,8 @@ proxy-groups:
       - 📍节点选择
   - name: 🚧全局拦截
     type: select
-    timeout: '2000'
-    max-failed-times: '2'
+    timeout: 2000
+    max-failed-times: 2
     include-all: false
     icon: https://www.clashverge.dev/assets/icons/block.svg
     exclude-filter: 官网|剩余|套餐|超时|群组
@@ -150,29 +149,15 @@ proxy-groups:
     type: load-balance
     strategy: round-robin
     url: https://telegram.org
-    interval: 123
+    interval: 120
     lazy: true
-    timeout: '2000'
-    max-failed-times: '2'
+    timeout: 600
+    max-failed-times: 2
     include-all: true
     hidden: true
     icon: https://www.clashverge.dev/assets/icons/balance.svg
     exclude-filter: 官网|剩余|套餐|超时|群组
     proxies: []
-  - name: 📄散列均衡
-    type: load-balance
-    strategy: consistent-hashing
-    url: https://telegram.org
-    interval: 120
-    lazy: true
-    timeout: '2000'
-    max-failed-times: '2'
-    include-all: true
-    hidden: true
-    icon: https://www.clashverge.dev/assets/icons/merry_go.svg
-    exclude-filter: 官网|剩余|套餐|超时|群组
-    proxies: []
-
 `
 
 export let rule = `
