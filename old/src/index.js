@@ -1,6 +1,5 @@
 import yaml from 'js-yaml';
-
-import {pre, post, group} from "./strings.js";
+import {pre, rule, group} from "./strings.js";
 import {html} from "./html.js";
 
 addEventListener('fetch', event => {
@@ -44,15 +43,29 @@ async function handleRequest(event) {
         if (subInfo) extraHeaders['subscription-userinfo'] = subInfo;
 
         const result = await response.text();
-        let parsed;
 
+        let parsed;
         try {
             parsed = yaml.load(result);
         } catch (e) {
             parsed = null;
         }
 
-        if (!parsed?.proxies || !Array.isArray(parsed.proxies) || parsed.proxies.length === 0) {
+        const hasProxies = parsed?.proxies && Array.isArray(parsed.proxies) && parsed.proxies.length > 0;
+        const hasProxyProviders = parsed?.['proxy-providers'] && Object.keys(parsed['proxy-providers']).length > 0;
+
+        let content = null;
+
+        if (hasProxies || hasProxyProviders) {
+            const filtered = {};
+            if (hasProxies) filtered.proxies = parsed.proxies;
+            if (hasProxyProviders) filtered['proxy-providers'] = parsed['proxy-providers'];
+
+            content = yaml.dump(filtered);  // 只输出这两个字段
+            event.waitUntil(
+                BACKUP.put(link, content, {expirationTTL: 15552000}).catch(() => {})
+            );
+        } else {
             const cached = await BACKUP.get(link);
             if (!cached) {
                 return new Response(
@@ -60,28 +73,12 @@ async function handleRequest(event) {
                     {status: 432, headers: {'Content-Type': 'application/json'}}
                 );
             }
-            parsed = yaml.load(cached);
-        } else {
-            event.waitUntil(
-                BACKUP.put(link, result, {expirationTTL: 15552000}).catch(() => {
-                    //warnings = '#保存备份失败\n' + warnings;
-                })
-            );
+            content = cached;
+            warnings += "#已使用备份"
         }
 
-        const mergedProxies = {proxies: parsed.proxies};
 
-        const proxyNames = mergedProxies.proxies.map(proxy => proxy.name);
-        mergedProxies['proxy-groups'] = JSON.parse(group);
-
-        mergedProxies['proxy-groups'].forEach((group, index) => {
-            if (index !== 1 && index !== 5 && index !== 6 && index !== 7) {
-                group.proxies.push(...proxyNames);
-            }
-        });
-
-        const content = yaml.dump(mergedProxies);
-        let finalContent = warnings + pre + content + post;
+        let finalContent = warnings + pre + content + group + rule;
 
         function encodeRFC5987ValueChars(str) {
             const encoder = new TextEncoder();
@@ -103,7 +100,7 @@ async function handleRequest(event) {
             fileName = `🌀${rootDomain}`;
         }
 
-        contentDisposition = `attachment; filename*=UTF-8''${encodeRFC5987ValueChars(fileName)}`;
+        contentDisposition = `inline; filename*=UTF-8''${encodeRFC5987ValueChars(fileName)}`;
 
         return new Response(finalContent, {
             status: 200,
