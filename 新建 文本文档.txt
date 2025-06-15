@@ -63,10 +63,10 @@ dns:
     - system
   direct-nameserver-follow-policy: false  #是否遵循 nameserver-policy，默认为不遵守，仅当 direct-nameserver 不为空时生效
   nameserver:  #默认的域名解析服务器
-    - https://8.8.4.4/dns-query
-    - https://8.8.8.8/dns-query
-    - https://1.1.1.1/dns-query
-    - https://1.0.0.1/dns-query
+    - tls://119.28.28.28:853
+    - tls://119.29.29.29:853
+    - tls://223.5.5.5:853
+    - tls://223.5.5.6:853
 
 proxy-providers:
   provider1:
