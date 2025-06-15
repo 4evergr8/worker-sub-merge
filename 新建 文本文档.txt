@@ -74,12 +74,13 @@ proxy-providers:
     url: "https://mojie.app/api/v1/client/subscribe?token=d30ad3d201bf982339ec3e8027866110"
     path: 
     interval: 3600
-    proxy: DIRECT
+    #proxy: DIRECT
     size-limit: 0
     header:
       User-Agent:
       - "Clash/v1.18.0"
       - "mihomo/1.18.3"
+      - "clash-verge/v1.6.6"
  
 
 proxy-groups:
