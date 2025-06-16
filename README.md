@@ -2,15 +2,11 @@
 ### 基于[Cloudflare Workers©](https://workers.cloudflare.com/)进行部署，可自定义域名  
 ### 测试链接[merge.4evergr8.workers.dev](https://merge.4evergr8.workers.dev?links=https://raw.githubusercontent.com/MetaCubeX/mihomo/refs/heads/Meta/docs/config.yaml)
 
-
 ## 访问链接格式：  
 
 ```plaintext
 Worker链接?links=https://aaa.aaa
 ```
-
-
-
 
 ## 配置内容
 变量名：pre，用于自定义代理前的所有内容，如下
@@ -173,12 +169,9 @@ proxy-groups:
     exclude-filter: 官网|剩余|套餐|超时|群组
     proxies: []
 
-
-
 ```
 变量名：post，用于自定义代理后的所有内容，如下
 ```plaintext
-
 
 rules:
   - DOMAIN-REGEX,\b(ads\.|ad\.)\S+,🚧全局拦截
