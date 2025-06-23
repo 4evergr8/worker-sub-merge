@@ -26,26 +26,20 @@ etag-support: true  #外部资源下载的 ETag 支持，默认为 true
 dns:
   enable: true  #是否启用，如为 false，则使用系统 DNS 解析
   cache-algorithm: arc  #支持的算法：lru: Least Recently Used, 默认值 arc: Adaptive Replacement Cache
-  prefer-h3: false  #DOH 优先使用 http/3
+  prefer-h3: true  #DOH 优先使用 http/3
   listen: 0.0.0.0:1053  #DNS 服务监听，支持 udp, tcp
   ipv6: true  #是否解析 IPV6, 如为 false, 则回应 AAAA 的空解析
   enhanced-mode: fake-ip  #mihomo 的 DNS 处理模式
   fake-ip-range: 198.18.0.1/16  #fakeip 下的 IP 段设置，tun 的默认 IPV4 地址 也使用此值作为参考
   fake-ip-filter:  #fakeip 过滤，以下地址不会下发 fakeip 映射用于连接
-    - "+.lan"
-    - "+.local"
-    - "+.msftconnecttest.com"
-    - "+.msftncsi.com"
-    - "localhost.ptlogin2.qq.com"
-    - "localhost.sec.qq.com"
-    - "localhost.work.weixin.qq.com"
     - 'geosite:private'
   fake-ip-filter-mode: blacklist  #可选 blacklist/whitelist，默认blacklist，whitelist 即只有匹配成功才返回 fake-ip 
   use-hosts: false  #是否回应配置中的 hosts，默认 true
   use-system-hosts: true  #是否查询系统 hosts，默认 true
   respect-rules: true  #dns 连接遵守路由规则，需配置 proxy-server-nameserver
   default-nameserver:  #默认 DNS, 用于解析 DNS 服务器 的域名，必须为 IP, 可为加密 DNS
-    - system
+    - tls://1.12.12.12:853
+    - tls://223.5.5.5:853
   nameserver-policy:
     "geosite:private,cn,geolocation-cn": system
     "geoip:cn": system
@@ -57,10 +51,8 @@ dns:
     - system
   direct-nameserver-follow-policy: false  #是否遵循 nameserver-policy，默认为不遵守，仅当 direct-nameserver 不为空时生效
   nameserver:  #默认的域名解析服务器
-    - https://8.8.4.4/dns-query
-    - https://8.8.8.8/dns-query
-    - https://1.1.1.1/dns-query
-    - https://1.0.0.1/dns-query
+    - https://dns.cloudflare.com/dns-query
+    - https://dns.google/dns-query
 `
 
 export let group = `
