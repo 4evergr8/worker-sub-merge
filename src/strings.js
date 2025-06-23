@@ -45,18 +45,14 @@ dns:
   use-system-hosts: true  #是否查询系统 hosts，默认 true
   respect-rules: true  #dns 连接遵守路由规则，需配置 proxy-server-nameserver
   default-nameserver:  #默认 DNS, 用于解析 DNS 服务器 的域名，必须为 IP, 可为加密 DNS
-    - tls://119.28.28.28:853
-    - tls://119.29.29.29:853
-    - tls://223.5.5.5:853
-    - tls://223.5.5.6:853
+    - system
   nameserver-policy:
     "geosite:private,cn,geolocation-cn": system
     "geoip:cn": system
   proxy-server-nameserver:  #代理节点域名解析服务器，仅用于解析代理节点的域名，如果不填则遵循 nameserver-policy、nameserver 和 fallback 的配置
-    - tls://119.28.28.28:853
-    - tls://119.29.29.29:853
-    - tls://223.5.5.5:853
-    - tls://223.5.5.6:853
+    - https://dns.alidns.com/dns-query
+    - https://dns.flymc.cc/dns-query
+    - https://dns.pub/dns-query
   direct-nameserver:  #用于 direct 出口域名解析的 DNS 服务器，如果不填则遵循 nameserver-policy、nameserver 和 fallback 的配置
     - system
   direct-nameserver-follow-policy: false  #是否遵循 nameserver-policy，默认为不遵守，仅当 direct-nameserver 不为空时生效
